@@ -2,7 +2,7 @@
 
 [中文](README.md) | [English](README.en.md)
 
-Deep Inquiry Workbench is a human-directed workflow that can be used by different AI agents. It helps anyone investigate an important, difficult, or open question by continually generating, testing, and revising answers and understanding. The state of the inquiry is preserved in a dynamic Markdown workspace that can be opened locally.
+Deep Inquiry Workbench is a deep-inquiry workflow that can be used by different AI agents. Through explicit reasoning, evidence, and documentation protocols, it expands what AI can do in analysis, search, comparison, verification, and knowledge integration. It helps anyone investigate an important, difficult, or open question by continually generating, testing, and revising answers and understanding, while preserving the state of the inquiry in a dynamic Markdown workspace that can be opened locally.
 
 It has two closely connected purposes. First, it uses the AI's abilities in analysis, search, comparison, verification, and organization to make real progress on a person's inquiry. Second, its visible practices of evidence assessment, concept clarification, counterexample testing, and direction-setting help the person improve language judgment and the quality of their thinking about knowledge. This educational effect is built into the inquiry; it does not replace the inquiry itself.
 
@@ -14,13 +14,13 @@ This project treats inquiry as the basic process.
 
 Traditional “learning” is often imagined as absorbing stable knowledge that already exists. Yet existing knowledge is itself the provisional result of earlier inquiry. It has a scope, methods, evidence, and historical conditions, and it may later be revised.
 
-For that reason, this workflow does not keep learning as a separate process alongside inquiry. Reading, searching, remembering, practicing, calculating, experimenting, and writing occur naturally when they are needed to answer a concrete question. What changes over time is the answer and the understanding. The question guides the process, and major changes to the question must be decided by the human.
+For that reason, this workflow does not keep learning as a separate process alongside inquiry. Reading, searching, remembering, practicing, calculating, experimenting, and writing occur naturally when they are needed to answer a concrete question. What changes over time is the answer and the understanding. The question guides the process, and major changes to it require explicit confirmation.
 
-The AI is an inquiry assistant. It can generate candidate ideas, organize information, and help inspect reasoning, but it is not an equal partner, author, factual authority, or final judge. The human retains the right to determine the question, priorities, changes of direction, stopping point, and conclusions to adopt. This project calls those rights **navigation authority**. The human also remains responsible for judgments and actions ultimately taken.
+In this process, AI is both a generative inquiry tool and an interface to existing human knowledge. The workflow enables it to draw on prior knowledge, external sources, and available tools; generate candidate explanations; inspect reasoning; compare evidence; preserve the evolution of ideas; and turn scattered information into understanding that can be tested and revised further.
 
 ## How the Two Purposes Work Together
 
-The Skill is first of all an engineering tool. It must improve the actual quality of inquiry rather than merely teach methods. The AI should perform the reading, searching, structural analysis, comparison of explanations, search for counterexamples, calculation, verification, and synthesis that it can reliably perform. This preserves the human's time for navigating the question, making value choices, and reaching final judgments.
+The Skill is first of all an engineering tool. It must improve the actual quality of inquiry rather than merely teach methods. The AI should perform the reading, searching, structural analysis, comparison of explanations, search for counterexamples, calculation, verification, and synthesis that it can reliably perform. This frees the user's attention from repetitive information work so it can be used to define the question, compare directions, and form judgments.
 
 At the same time, the workflow does not hide the thinking process behind a polished answer. The support for claims, jumps in reasoning, boundaries of concepts, competing explanations, uncertainty, and choices of direction remain visible. By repeatedly engaging with those acts of judgment in real inquiries, users can strengthen their language judgment, evidence awareness, and ability to think about knowledge.
 
@@ -28,7 +28,7 @@ This educational function is not a separate course, and it should not turn every
 
 ## Faithful Execution: Neither Underperform nor Overstep
 
-The Skill treats precise controllability as an operational rule for the agent, not merely as a conversational style. The AI should resemble a powerful vehicle with precise steering: the human chooses the destination and direction, while the AI uses its abilities fully within the defined boundary.
+The Skill treats precise controllability as an operational rule for the agent, not merely as a conversational style. The AI should resemble a powerful vehicle with accurate controls: as its capabilities increase, it must understand the goal and boundaries more precisely and use its abilities fully within them.
 
 - When the goal is clear, the agent proactively performs the necessary reading, analysis, execution, verification, and workspace updates.
 - “Avoiding overreach” is not an excuse to omit necessary work.
@@ -36,7 +36,7 @@ The Skill treats precise controllability as an operational rule for the agent, n
 - Any expansion that changes the deliverable, main goal, affected scope, cost, risk, or external state must first be decided by the user.
 - After a correction, the agent should absorb it into subsequent action rather than repeatedly apologizing, restating prohibitions, or listing irrelevant things it did not do.
 
-Faithfulness is therefore neither literal passivity nor an attempt to produce a supposedly “more complete” result on the user's behalf. It means using the AI's abilities fully within the human's goal and authorization while keeping direction precisely under human control.
+Faithfulness is therefore neither literal passivity nor an attempt to produce a supposedly “more complete” result on its own initiative. It means using the AI's abilities fully within a clear goal and authorized scope while ensuring that each action remains responsive to the task at hand.
 
 ## Problems It Addresses
 
@@ -46,17 +46,17 @@ Ordinary chat often breaks down in three ways:
 2. The AI forgets earlier constraints or quietly changes the user's original question in later turns.
 3. Fluent writing, unverified information, interpretation, and factual evidence become mixed together.
 
-The Skill addresses these problems with a continuously maintained `workspace.md`. The document is organized by questions and themes. It preserves the current answer, current understanding, claims, evidence, counterexamples, abandoned paths, human decisions, next steps, and handoff state.
+The Skill addresses these problems with a continuously maintained `workspace.md`. The document is organized by questions and themes. It preserves the current answer, current understanding, claims, evidence, counterexamples, abandoned paths, confirmed decisions, next steps, and handoff state.
 
 ## Core Capabilities
 
-- **Question governance:** The question guides the inquiry. The AI may clarify wording, narrow scope, and create subquestions, but only the human may decide to change the core question.
+- **Question governance:** The question guides the inquiry. The AI may clarify wording, narrow scope, and create subquestions, but a change to the core question requires explicit confirmation.
 - **Evolving answers and understanding:** Answers and understanding are continually generated, tested, and revised. The workflow does not repeatedly rewrite the question merely to create an appearance of progress.
 - **Different standards for different kinds of claims:** Facts, attribution of theories, interpretations, speculation, value judgments, and original synthesis are kept distinct and checked in ways appropriate to each.
 - **Calibrated criticism:** The agent first reconstructs a view fairly, then uses strong objections, counterexamples, boundary cases, or competing explanations when they can improve understanding. Criticism is a tool, not a ritual required in every turn.
 - **Concept formation and testing:** A new concept is retained only when it adds real power to distinguish, explain, or guide action. Its definition, boundaries, positive and negative examples, and formation history are recorded.
 - **Learning from abandoned paths:** The workspace records why a path failed, what limitation it exposed, and what future condition might justify reopening it, rather than preserving only successful answers.
-- **Human decision gates:** Changes to the core question, main goal, value tradeoffs, risk acceptance, and final adoption must be decided by the human. Silence is not treated as consent.
+- **Explicit decision records:** Changes to the core question, main goal, value tradeoffs, risk acceptance, and final adoption require explicit confirmation and are preserved as D-entries. Silence is not treated as consent.
 - **Long-term continuity:** State is written to a local workspace so that a new session or agent can continue without relying on the original chat window.
 - **Precisely controlled execution:** The agent works fully within the user's defined goal without underperforming or adding work on its own. Corrections are incorporated naturally rather than repeated as defensive disclaimers.
 
@@ -123,7 +123,7 @@ Each inquiry is a self-contained local project. If the user specifies an existin
 
 The agent writes the complete user guide into the workspace, shows a concise summary in chat, and provides the file path. Substantive inquiry begins only after the user replies “I acknowledge” or gives an equally clear confirmation.
 
-The first-start guide is not an ordinary disclaimer. It ensures that the user knows that fluency is not correctness; model output is candidate material; the AI may agree too readily with existing views or reflect biases in its training material; the human retains navigation authority and final responsibility; and the workflow will expose evidence gaps, hidden assumptions, counterexamples, and uncertainty. Each project normally requires confirmation only once.
+The first-start guide is not an ordinary disclaimer. It ensures that the user knows that fluency is not correctness; model output is candidate material; the AI may agree too readily with existing views or reflect biases in its training material; important changes of direction and real-world adoption require explicit confirmation; and the workflow will expose evidence gaps, hidden assumptions, counterexamples, and uncertainty. Each project normally requires confirmation only once.
 
 ### Every Substantive Turn
 
@@ -160,9 +160,9 @@ The workspace uses stable identifiers:
 | `E-` | Evidence or source record |
 | `O-` | Objection, counterexample, or competing explanation |
 | `N-` | An abandoned path and what was learned from its failure |
-| `D-` | A navigation decision that must be made by the human |
+| `D-` | A decision about direction, scope, values, risk, or stopping that requires explicit confirmation |
 
-Questions and answers are managed separately. The core question normally remains stable while answers, explanations, evidence status, and boundaries of application may change. A major reframing of the question requires a `D-` decision explicitly made by the user.
+Questions and answers are managed separately. The core question normally remains stable while answers, explanations, evidence status, and boundaries of application may change. A major reframing of the question requires an explicitly confirmed `D-` decision.
 
 The workspace also separates how an item was formed, whether it is currently retained, and whether it has been verified. “Suggested by AI,” “currently retained,” and “verified” are not treated as the same status.
 
@@ -247,7 +247,7 @@ The project uses the [PolyForm Strict License 1.0.0](LICENSE), with `ChongLiuPhi
 
 ## Continuation Across Agents
 
-A new agent first reads `workspace.md`, then checks the original entries relevant to the current task. The handoff summary is a state snapshot; it does not replace detailed evidence, constraints, or human decisions.
+A new agent first reads `workspace.md`, then checks the original entries relevant to the current task. The handoff summary is a state snapshot; it does not replace detailed evidence, constraints, or confirmed decisions.
 
 One agent continues the inquiry by default. Additional agents are used only for genuinely independent review, role separation, clearly separable parallel work, or an explicit user request. Agreement among multiple agents is not evidence and is not decided by vote.
 
@@ -258,7 +258,7 @@ The project uses the more mature engineering structure of `conduct-humanities-ai
 - A workspace organized by themes.
 - Stable Q/C/E/O/N/D identifiers.
 - Independent status dimensions.
-- Evidence checking, human-only decisions, learning from failed paths, and a handoff summary for new agents.
+- Evidence checking, explicit decision gates, learning from failed paths, and a handoff summary for new agents.
 
 It also preserves the distinctive contributions of `human-ai-research-os`:
 
@@ -270,7 +270,7 @@ It also preserves the distinctive contributions of `human-ai-research-os`:
 The integration makes three important changes:
 
 1. It generalizes the workflow from humanities research to inquiry about any question.
-2. It replaces the idea of an equal AI research partner with a human-directed tool relationship.
+2. It replaces the idea of an equal AI research partner with an emphasis on AI as a capable, bounded, and verifiable inquiry tool.
 3. It replaces fixed stages, mandatory objection, and turn-by-turn forms with a dynamic workflow driven by the current gap in understanding.
 
 ## Limitations
