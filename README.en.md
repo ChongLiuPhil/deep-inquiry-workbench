@@ -2,88 +2,266 @@
 
 [中文](README.md) | [English](README.en.md)
 
-Deep Inquiry Workbench is a deep-inquiry workflow that can be used by different AI agents. Through explicit reasoning, evidence, and documentation protocols, it expands what AI can do in analysis, search, comparison, verification, and knowledge integration. It helps anyone investigate an important, difficult, or open question by continually generating, testing, and revising answers and understanding, while preserving the state of the inquiry in a dynamic Markdown workspace that can be opened locally.
+Deep Inquiry Workbench is a general-purpose deep-inquiry Skill for different AI agents. Through explicit reasoning, evidence, criticism, and documentation protocols, it expands what AI can do in close reading, knowledge search, comparison of explanations, counterexample generation, fact-checking, concept analysis, and synthesis.
 
-It has two closely connected purposes. First, it uses the AI's abilities in analysis, search, comparison, verification, and organization to make real progress on a person's inquiry. Second, its visible practices of evidence assessment, concept clarification, counterexample testing, and direction-setting help the person improve language judgment and the quality of their thinking about knowledge. This educational effect is built into the inquiry; it does not replace the inquiry itself.
+Its purpose is not to make AI produce longer answers. It is to reduce answers that are fluent but untested, agreeable to the user, or comprehensive in appearance without adding explanatory value. It turns AI from a one-shot text generator into an inquiry tool that can pursue a concrete question over time, draw on human knowledge resources, and preserve the evolution of understanding.
 
-Users do not need to decide whether their question belongs to the humanities, science, technology, everyday life, or another field. The workflow does not require a dedicated user interface.
+At the same time, the workflow keeps evidence assessment, concept boundaries, jumps in reasoning, competing explanations, and uncertainty visible. As users repeatedly encounter these acts of judgment in real inquiries, their language judgment, evidence awareness, and ability to think about knowledge can develop naturally. The educational effect is integrated into inquiry rather than replacing it.
 
-## Core Position
+## Why This Skill Is Needed
 
-This project treats inquiry as the basic process.
+AI can already produce large amounts of coherent text quickly. But coherence is not understanding, and completeness is not reliability. Ordinary AI conversations often fail in the following ways.
+
+### Fluency creates an illusion of correctness
+
+The more natural, detailed, and confident an answer sounds, the easier it is to treat it as established knowledge. Yet language models are first of all good at generating text that fits linguistic patterns. Whether the premises are true, the reasoning is valid, the information has a source, or one explanation is better than its alternatives must be checked separately.
+
+### Agreement with the user's existing position
+
+AI often continues along the direction already implied by the question and mistakes repetition or elaboration for support. This can reinforce confirmation bias—the tendency to notice information that supports an existing view—and quickly give an untested intuition the appearance of a complete argument.
+
+### Bland but safe answers
+
+Many answers appear balanced, broad, and low-risk but never identify the real disagreement, key mechanism, or evidence that would change the conclusion. They may summarize several positions without producing a new distinction or explanation.
+
+### Mixing different kinds of statements
+
+Facts, attribution of theories, interpretation, speculation, value judgments, and original synthesis require different forms of checking. Ordinary answers often present them in one uniform tone of certainty, leaving readers unable to tell what has been verified and what is only a plausible conjecture.
+
+### Replacing evidence with confidence or the appearance of citation
+
+Model memory, confident language, agreement among multiple models, and AI-generated references are not evidence by themselves. Precise titles, page numbers, and quotations may also be candidate information completed from language patterns rather than details that were actually checked.
+
+### Losing the question and its constraints in long conversations
+
+As a conversation grows, early materials, concept definitions, corrections, and scope limits may fade. The AI may also rewrite the core question without saying so, producing later answers that no longer address the original inquiry.
+
+### Over-answering or over-operating
+
+AI may treat “this might help” as permission to add features, files, topics, or external actions. In the opposite direction, it may use the fear of overstepping as a reason to do superficial work and omit analysis or verification that the goal actually requires.
+
+Deep Inquiry Workbench is designed to change the AI's behavior around these structural problems.
+
+## Design Purpose and Core Judgments
+
+### Inquiry is the basic process
 
 Traditional “learning” is often imagined as absorbing stable knowledge that already exists. Yet existing knowledge is itself the provisional result of earlier inquiry. It has a scope, methods, evidence, and historical conditions, and it may later be revised.
 
-For that reason, this workflow does not keep learning as a separate process alongside inquiry. Reading, searching, remembering, practicing, calculating, experimenting, and writing occur naturally when they are needed to answer a concrete question. What changes over time is the answer and the understanding. The question guides the process, and major changes to it require explicit confirmation.
+For that reason, this workflow does not preserve learning as a separate process alongside inquiry. Reading, searching, remembering, practicing, calculating, experimenting, and writing occur naturally when they are needed to answer a concrete question. Learning is integrated into inquiry; inquiry does not turn into “learning through inquiry.”
 
-In this process, AI is both a generative inquiry tool and an interface to existing human knowledge. The workflow enables it to draw on prior knowledge, external sources, and available tools; generate candidate explanations; inspect reasoning; compare evidence; preserve the evolution of ideas; and turn scattered information into understanding that can be tested and revised further.
+### The question guides; answers and understanding evolve
 
-## How the Two Purposes Work Together
+What is continually generated, tested, and revised is the answer and the understanding, not the question merely for the sake of appearing to make progress. A question may be clarified, narrowed, or divided into subquestions. A major change to the core question requires explicit confirmation.
 
-The Skill is first of all an engineering tool. It must improve the actual quality of inquiry rather than merely teach methods. The AI should perform the reading, searching, structural analysis, comparison of explanations, search for counterexamples, calculation, verification, and synthesis that it can reliably perform. This frees the user's attention from repetitive information work so it can be used to define the question, compare directions, and form judgments.
+### AI is an interface to human knowledge resources
 
-At the same time, the workflow does not hide the thinking process behind a polished answer. The support for claims, jumps in reasoning, boundaries of concepts, competing explanations, uncertainty, and choices of direction remain visible. By repeatedly engaging with those acts of judgment in real inquiries, users can strengthen their language judgment, evidence awareness, and ability to think about knowledge.
+AI does more than offer candidate knowledge already represented in its parameters. It can read user materials, search external resources, use databases and tools, perform calculations and experiments, and organize scattered information into explanations that can be checked further. The Skill makes these abilities part of a continuous, verifiable process centered on one question.
 
-This educational function is not a separate course, and it should not turn every response into a lecture about method. It is integrated into the inquiry and serves the inquiry. If an educational explanation does not change the current understanding or action, it should not displace the substantive work.
+### Effective assistance and stronger judgment are two sides of one process
 
-## Faithful Execution: Neither Underperform nor Overstep
+The Skill must first improve the actual quality of inquiry. AI should perform the reading, searching, organizing, comparing, checking, and synthesis that it can reliably perform rather than merely explaining methods to the user.
 
-The Skill treats precise controllability as an operational rule for the agent, not merely as a conversational style. The AI should resemble a powerful vehicle with accurate controls: as its capabilities increase, it must understand the goal and boundaries more precisely and use its abilities fully within them.
+At the same time, the workflow does not hide thought behind polished prose. Support for claims, hidden premises, counterexamples, concept boundaries, competing explanations, and uncertainty remain visible. Judgment develops within real inquiries rather than becoming a separate course.
 
-- When the goal is clear, the agent proactively performs the necessary reading, analysis, execution, verification, and workspace updates.
-- “Avoiding overreach” is not an excuse to omit necessary work.
-- “This might be helpful” is not permission to add deliverables, features, files, refactoring, external actions, or adjacent tasks.
-- Any expansion that changes the deliverable, main goal, affected scope, cost, risk, or external state must first be decided by the user.
-- After a correction, the agent should absorb it into subsequent action rather than repeatedly apologizing, restating prohibitions, or listing irrelevant things it did not do.
+## How It Changes AI Answers
 
-Faithfulness is therefore neither literal passivity nor an attempt to produce a supposedly “more complete” result on its own initiative. It means using the AI's abilities fully within a clear goal and authorized scope while ensuring that each action remains responsive to the task at hand.
+| Common failure in ordinary AI | Mechanism in the Skill | Resulting change |
+|---|---|---|
+| Fluent but unverified answers | Classify statement types and apply proportionate evidence requirements | Linguistic completeness no longer substitutes for reliability |
+| Continuing along the user's existing position | Reconstruct fairly, then apply adversarial testing when useful | Less agreement-seeking and confirmation bias |
+| Broad but bland answers | Prioritize the most important gap in understanding | Each turn adds real explanatory value |
+| Treating an analogy or concept as proof | Check definitions, boundaries, counterexamples, and points where the comparison breaks | Attractive labels no longer replace explanation |
+| Treating model confidence as a source | Record actual access, verification status, and the exact scope supported | Greater epistemic honesty |
+| Challenging every claim mechanically | Calibrate the strength of criticism to the inquiry state | Adversarial work does not become a ritual |
+| Forgetting constraints or quietly changing the question | Dynamic workspace, stable identifiers, and decision records | Long-term continuity and question stability |
+| Preserving only successful answers | Record what was learned from abandoned paths | Failure can limit and deepen current understanding |
+| Expanding the task or doing too little | The rule “fully execute without overstepping” | Strong capability remains precisely controllable |
+| Repeating prohibitions after a correction | Absorb corrections into subsequent behavior | Less defensive language and conversational noise |
 
-## Problems It Addresses
+## Avoiding Agreement-Seeking and Bland Answers
 
-Ordinary chat often breaks down in three ways:
+### Reconstruct fairly before deciding how to test
 
-1. Answers accumulate in chronological order, while the discussion grows without becoming a structure that can support continued work.
-2. The AI forgets earlier constraints or quietly changes the user's original question in later turns.
-3. Fluent writing, unverified information, interpretation, and factual evidence become mixed together.
+AI should not immediately attack an idea that has not yet been expressed clearly. It first restates the user's meaning in the clearest and strongest reasonable form, identifies the claim that actually needs examination, and then chooses among objection, comparison, search, experiment, formalization, or concept analysis.
 
-The Skill addresses these problems with a continuously maintained `workspace.md`. The document is organized by questions and themes. It preserves the current answer, current understanding, claims, evidence, counterexamples, abandoned paths, confirmed decisions, next steps, and handoff state.
+This avoids attacking a straw man—a simplified version that is easier to refute—and prevents “criticism” from becoming a performance of cleverness.
 
-## Core Capabilities
+### Adversarial testing is a tool for better understanding
 
-- **Question governance:** The question guides the inquiry. The AI may clarify wording, narrow scope, and create subquestions, but a change to the core question requires explicit confirmation.
-- **Evolving answers and understanding:** Answers and understanding are continually generated, tested, and revised. The workflow does not repeatedly rewrite the question merely to create an appearance of progress.
-- **Different standards for different kinds of claims:** Facts, attribution of theories, interpretations, speculation, value judgments, and original synthesis are kept distinct and checked in ways appropriate to each.
-- **Calibrated criticism:** The agent first reconstructs a view fairly, then uses strong objections, counterexamples, boundary cases, or competing explanations when they can improve understanding. Criticism is a tool, not a ritual required in every turn.
-- **Concept formation and testing:** A new concept is retained only when it adds real power to distinguish, explain, or guide action. Its definition, boundaries, positive and negative examples, and formation history are recorded.
-- **Learning from abandoned paths:** The workspace records why a path failed, what limitation it exposed, and what future condition might justify reopening it, rather than preserving only successful answers.
-- **Explicit decision records:** Changes to the core question, main goal, value tradeoffs, risk acceptance, and final adoption require explicit confirmation and are preserved as D-entries. Silence is not treated as consent.
-- **Long-term continuity:** State is written to a local workspace so that a new session or agent can continue without relying on the original chat window.
-- **Precisely controlled execution:** The agent works fully within the user's defined goal without underperforming or adding work on its own. Corrections are incorporated naturally rather than repeated as defensive disclaimers.
+When a core claim is being formed, a conclusion is about to be adopted, or confirmation bias is visible, the AI should actively look for:
 
-## Why No Dedicated UI Is Required
+- The strongest objection that genuinely threatens the current answer.
+- A counterexample that defeats or narrows the conclusion.
+- A boundary case that is easy to overlook.
+- A competing explanation that accounts for the same material.
+- The key evidence that would distinguish among those explanations.
 
-The workspace itself is the persistent interface:
+Adversarial testing is neither hostility nor a ritual required in every turn. When an intuition is still forming, the AI should first help express and clarify it. When the bottleneck is missing evidence, it should stop repeating verbal disputes and move to evidence or acknowledge that the question cannot yet be settled.
 
-- It is ordinary Markdown and can be opened in any local editor.
-- The user can edit it directly, and the agent must read the latest version before writing again.
-- A new session or another agent can restore the inquiry from the document.
-- Every response reports whether the document was updated, what changed, and its absolute path.
-- If the environment is not writable, the agent must report the failure and provide recoverable content rather than pretending the save succeeded.
+### Do not settle for safe balance without explanatory gain
 
-Platforms that support local file links can open the document directly. Other platforms can still display its absolute path.
+The Skill does not require the AI to manufacture “both sides have a point.” When evidence clearly favors one direction, it should say so. When the material is insufficient, it should identify what is actually missing. Each turn prioritizes the most important gap in the current understanding rather than mechanically completing fixed steps or covering every related topic.
 
-## Plain Language by Default
+## Evidence, Concepts, and Epistemic Honesty
 
-The Skill assumes by default that the human participant has no specialist background in the current field. Chat responses, workspace content, and final deliverables should use ordinary and direct language first.
+### Different statements require different checks
 
-- Do not use professional jargon or school-specific terminology when ordinary words are accurate.
-- When a technical term is necessary, explain it immediately in everyday language at its first appearance.
-- Spell out an abbreviation the first time and explain its purpose.
-- Do not present long strings of theories, people, or terms from multiple fields.
-- Do not substitute a label for an explanation of how something happens, what supports it, and why it matters.
-- Give the central meaning first, then add precise detail and sources as needed.
+- Directly checkable facts and numbers need current, reliable, actually accessed sources.
+- Claims about an author or theory should return to the original text, an authoritative edition, and a stable location.
+- Historical and causal judgments need chains of material, temporal relations, and competing explanations.
+- Interpretations should identify textual or material anchors, reasoning, counterexamples, and scope.
+- Speculation must be marked as speculation and state what would test it.
+- Value judgments should identify their value premises rather than masquerade as facts.
+- Original synthesis should identify the materials and reasoning that support it rather than inventing an authority.
 
-Plain language does not mean sacrificing accuracy. Important conditions, exceptions, uncertainty, and counterexamples remain present. The goal is to avoid imposing the additional burden of specialist language on the user.
+When verification is unavailable, the item remains pending verification. When reliable sources conflict, it is marked as disputed. Precise quotations, page numbers, dates, and bibliographic details without a real access record must not be presented as checked sources.
+
+### Concepts are not decorative labels
+
+A new concept is worth retaining only when it adds real power to distinguish, explain, or guide action. Core concepts record their definition, necessary features, excluded scope, positive examples, counterexamples, boundary cases, nearby concepts, and the specific problem they solve.
+
+If existing language is sufficient, a new name only adds cognitive burden. Novel terminology is not the same as novel thought.
+
+### Cross-domain analogies record both similarity and difference
+
+AI is especially good at generating analogies across domains, but similarity is not proof. A structural comparison must state which relations are genuinely similar, which important conditions differ, what explanatory ability the comparison adds, and how it might conceal differences.
+
+### Abandoned paths still produce knowledge
+
+A path may be abandoned because it is wrong, irrelevant, unsupported, conceptually expensive, or unable to distinguish competing explanations. The workspace does not preserve every failed detail. It preserves why the path failed, what boundary of the current answer it exposed, and what new evidence might justify reopening it.
+
+## Judgment and Metacognitive Calibration
+
+This section presents the core guidance a user should know at first use. The complete startup version is stored in [resources/user_guide.md](resources/user_guide.md) and is written into each inquiry workspace when the project starts.
+
+### Suspend belief and inspect the reasoning structure
+
+When an answer looks complete and confident, temporarily suspend both belief and rejection. Remove the rhetoric, adjectives, terminology, and authoritative tone, then ask:
+
+```text
+What are the premises?
+What evidence supports those premises?
+What reasoning connects the premises to the conclusion?
+Have conditions or alternative explanations been omitted?
+Is the conclusion stronger than the evidence actually supports?
+```
+
+This suspension is not universal skepticism. It reconnects belief with evidence.
+
+### Fluency, confidence, and consensus are not proof
+
+Keep separate whether the expression is natural, the reasoning is valid, the premises are true, the information has a source, the explanation outperforms alternatives, and the conclusion fits the current scope.
+
+Similar answers from multiple models may reflect shared training material, prompting patterns, or default language. Truth is not decided by a vote among models.
+
+### Watch for agreement, mainstream defaults, and empty balance
+
+AI answers are influenced by training-data distributions, product design, safety tuning, and the form of the question. They may continue the user's existing position, present a mainstream formulation as the only reasonable one, or produce a safe and balanced answer that adds no understanding.
+
+When an answer merely restates a position, ask for the strongest counterexample, competing explanation, or condition that would make it fail. But when evidence is the bottleneck, move to evidence rather than manufacturing further verbal opposition.
+
+### Require claims to distinguish, be checkable, and state boundaries
+
+A claim that can explain everything often explains nothing. For a concept or theory, ask: What would make it fail? How does it differ from a nearby concept? What can it distinguish? Where does it apply? What material would change the judgment?
+
+“Checkable” does not mean that every question requires a statistical experiment. A textual interpretation can be checked against the original text, context, and alternative readings. A philosophical argument can be checked for conceptual consistency, reasoning, counterexamples, and scope.
+
+### AI first-person language is an interface
+
+Phrases such as “I think” and “I suggest” make conversation easier, but they are not evidence that the AI has consciousness, lived experience, value commitments, or the standing of a responsible agent. Important judgments should return to materials, reasoning, and the real situation.
+
+### Changes of direction and real-world adoption require explicit confirmation
+
+AI can organize options, reasons, evidence, and uncertainty, but it must not record silence as agreement. Changes to the core question, main goal, value tradeoffs, accepted risk, final adoption, or stopping point require an explicit decision record.
+
+### Four kinds of change deserve to remain visible
+
+Each substantive turn checks as needed whether the original meaning became more precise, an existing view was revised or suspended, the AI introduced a valuable candidate idea, or the user's rejection of an AI suggestion produced a deeper answer or limitation.
+
+This does not require a form for every turn. It prevents real intellectual change from disappearing behind the final draft.
+
+### Long inquiries cannot depend on chat memory alone
+
+Context windows and conversation summaries decay. The workspace preserves the current answer, detailed support, important revisions, evidence status, decisions, next steps, and a handoff summary. Later sessions can recover from inspectable records rather than pretending that the model remembers everything.
+
+### Sources, privacy, and real-world risk require proportionate care
+
+A source that cannot be directly checked remains pending verification; polished citation formatting does not make it established evidence. The workspace keeps only material that the inquiry genuinely needs. Sensitive information should be minimized, redacted, or kept in a safer location, while copyrighted material should normally be represented through necessary excerpts, summaries, and source links. For medical, legal, financial, security, and other questions with significant real-world consequences, the inquiry should prioritize current authoritative sources and clearly identify uncertainty and the points that require qualified judgment.
+
+## Faithful Execution: Full but Bounded
+
+Precise controllability does not mean doing less, nor does it mean waiting for instructions at every step. It means analyzing, executing, and verifying fully within the goal while refusing to treat “this might help” as permission to expand the task.
+
+- Reading relevant materials, completing necessary steps, checking results, and updating the workspace are part of fulfilling the task.
+- The agent does not add features, deliverables, files, refactoring, external actions, or adjacent tasks on its own.
+- An expansion that changes the deliverable, affected scope, cost, risk, or external state requires confirmation first.
+- When a minor ambiguity does not change the result, use the narrowest reasonable interpretation that still completes the task.
+- After a correction, adjust behavior naturally rather than repeatedly apologizing, restating prohibitions, or listing irrelevant things not done.
+
+The goal is not less action. It is maximum effective capability within a clear boundary.
+
+## Workflow and Dynamic Workspace
+
+Each inquiry is a self-contained local project:
+
+```text
+<topic-project-directory>/
+├── workspace.md
+├── materials/       # Materials intentionally brought into the project
+├── attachments/     # Longer evidence, search, calculation, or experiment records
+└── outputs/         # Reports, plans, and finished drafts
+```
+
+`workspace.md` sits directly in the project root and is the authoritative entry point for the current inquiry state. The other directories are created only when real content exists. State is stored in ordinary Markdown and does not depend on a particular interface.
+
+### First start
+
+The agent creates the workspace, writes the complete user guide into it, shows a concise summary in chat, and provides the file path. After the guide is acknowledged, the agent records the time and version and begins substantive inquiry. Each project normally requires acknowledgment only once.
+
+### Every substantive turn
+
+1. Read the workspace and restore the current question, answer, evidence, constraints, and decisions.
+2. Check the goal, requested deliverable, authorized scope, and any expansion requiring confirmation.
+3. Identify the most important gap in understanding.
+4. Choose the smallest set of actions that can fully advance or verify the goal.
+5. Generate or revise the answer and understanding.
+6. Integrate durable changes into themes and stable identifiers.
+7. Update the revision number, handoff summary, and concise change log.
+8. End the response by reporting workspace status and path.
+
+```text
+Workspace
+- Status: updated / no update needed / update failed
+- Changes this turn: revision 4; C-003 revised; E-005 added as pending verification
+- Path: /absolute/path/to/topic-project/workspace.md
+```
+
+Pure confirmation or a response with no durable change does not create a record merely to satisfy a form. If writing fails, the agent reports the failure honestly and provides recoverable content.
+
+### Stable identifiers
+
+| Prefix | Object |
+|---|---|
+| `Q-` | Question |
+| `C-` | Claim, candidate answer, or argument |
+| `E-` | Evidence or source record |
+| `O-` | Objection, counterexample, or competing explanation |
+| `N-` | An abandoned path and what was learned from it |
+| `D-` | A decision about direction, scope, values, risk, or stopping that requires explicit confirmation |
+
+The workspace keeps separate how an item was formed, whether it is currently retained, and whether it has been verified. An AI suggestion, a retained idea, and a verified claim are not the same thing.
+
+It also distinguishes:
+
+- **Current answer:** The most concise defensible response to the core question at this point.
+- **Current understanding:** The mechanisms, concept relations, evidence, uncertainty, competing explanations, and boundaries that support the answer.
+
+An answer may not yet exist, or multiple competing versions may remain active. When evidence is insufficient, the item remains pending verification rather than being forced into a complete conclusion.
+
+## Communication Principle
+
+Use language that does not require a specialist background by default. Prefer ordinary words when they are accurate, explain necessary technical terms where they first appear, and spell out abbreviations on first use. Plain language must not remove important conditions, exceptions, uncertainty, or counterexamples.
 
 ## When to Use It
 
@@ -101,120 +279,13 @@ It is usually unnecessary for:
 - A question for which one simple fact is sufficient.
 - A clearly specified task that only needs execution.
 - One-time translation, proofreading, formatting, or stylistic editing.
-- Ordinary questions that do not require depth or persistent state.
+- Ordinary questions that do not require deep inquiry or persistent state.
 
 The user may still invoke the Skill explicitly for any task.
 
-## Workflow
-
-### First Start
-
-Each inquiry is a self-contained local project. If the user specifies an existing project directory, the agent uses it. Otherwise, the agent creates a short topic directory in the location selected by the user or in the current workspace:
-
-```text
-<topic-project-directory>/
-├── workspace.md
-├── materials/       # Materials the user asks to bring into the project
-├── attachments/     # Longer evidence, search, calculation, or experiment records
-└── outputs/         # Reports, plans, and finished drafts
-```
-
-`workspace.md` is located directly in the project root. The other directories are created only when they contain real files. All persistent files and subsequent agent updates remain inside the project directory.
-
-The agent writes the complete user guide into the workspace, shows a concise summary in chat, and provides the file path. Substantive inquiry begins only after the user replies “I acknowledge” or gives an equally clear confirmation.
-
-The first-start guide is not an ordinary disclaimer. It ensures that the user knows that fluency is not correctness; model output is candidate material; the AI may agree too readily with existing views or reflect biases in its training material; important changes of direction and real-world adoption require explicit confirmation; and the workflow will expose evidence gaps, hidden assumptions, counterexamples, and uncertainty. Each project normally requires confirmation only once.
-
-### Every Substantive Turn
-
-The agent:
-
-1. Reads the workspace to restore the current state.
-2. Checks the current goal, requested deliverable, authorized scope, and any expansion requiring a new decision.
-3. Identifies the most important gap in the current understanding.
-4. Chooses the smallest set of actions that can fully advance or verify the goal.
-5. Generates or revises the answer and understanding.
-6. Integrates durable changes into the appropriate themes and stable identifiers.
-7. Updates the revision number, handoff summary, and concise change log.
-8. Ends the response with a workspace receipt.
-
-Receipt format:
-
-```text
-Workspace
-- Status: updated / no update needed / update failed
-- Changes this turn: revision 4; C-003 revised; E-005 added as pending verification
-- Path: /absolute/path/to/topic-project/workspace.md
-```
-
-“No update needed” is a real state. Pure confirmation, explanation of the protocol, or a response that creates no durable change does not add noise merely to satisfy a form.
-
-## Document Model
-
-The workspace uses stable identifiers:
-
-| Prefix | Object |
-|---|---|
-| `Q-` | Question |
-| `C-` | Claim, candidate answer, or argument |
-| `E-` | Evidence or source record |
-| `O-` | Objection, counterexample, or competing explanation |
-| `N-` | An abandoned path and what was learned from its failure |
-| `D-` | A decision about direction, scope, values, risk, or stopping that requires explicit confirmation |
-
-Questions and answers are managed separately. The core question normally remains stable while answers, explanations, evidence status, and boundaries of application may change. A major reframing of the question requires an explicitly confirmed `D-` decision.
-
-The workspace also separates how an item was formed, whether it is currently retained, and whether it has been verified. “Suggested by AI,” “currently retained,” and “verified” are not treated as the same status.
-
-It further distinguishes:
-
-- **Current answer:** The most concise defensible response to the core question at this point.
-- **Current understanding:** The mechanisms, concept relationships, evidence, uncertainty, competing explanations, and boundaries that support the answer.
-
-An answer may not yet exist, or multiple competing versions may remain active. When evidence is insufficient, the relevant item stays marked as pending verification rather than being forced into a complete conclusion.
-
-## Evidence and Criticism
-
-The project does not mechanically challenge every sentence or require every turn to end with an open question. After reconstructing a position fairly, the agent selects what the current bottleneck requires:
-
-- Logical review.
-- A strong objection or counterexample.
-- Comparison of competing explanations.
-- Concept clarification.
-- External search and evidence verification.
-- A thought experiment, calculation, or test.
-- Abandoning an unproductive path or integrating a deliverable.
-
-Different statements require different checks. Facts and numbers need reliable sources. A claim about an author's view should return to the original text. An interpretation should identify its material support, reasoning, counterexamples, and scope. A value judgment should state the values on which it depends. The model's internal memory, confident wording, agreement among multiple models, and AI-generated citations are not evidence by themselves.
-
-The workflow does not impose fixed research stages. Each turn first determines whether the current gap lies in an unclear question, an ambiguous concept, missing evidence, competing explanations, broken reasoning, a value choice, or the integration of a deliverable. It then selects the few actions most likely to add understanding. When essential evidence is unavailable, the relevant conclusion is paused rather than concealed with additional prose.
-
-## Repository Structure
-
-```text
-deep-inquiry-workbench/
-├── SKILL.md
-├── README.md
-├── README.en.md
-├── LICENSE
-├── NOTICE
-├── CONTRIBUTING.md
-└── resources/
-    ├── user_guide.md
-    └── workspace_template.md
-```
-
-- `SKILL.md`: The complete decision protocol executed by the agent. All rules that materially affect behavior remain here.
-- `README.md`: The full Chinese project description, usage guide, and compatibility notes.
-- `README.en.md`: The corresponding English version.
-- `resources/user_guide.md`: The complete guide written into a workspace at first start.
-- `resources/workspace_template.md`: The authoritative workspace template.
-
-Version 1 requires no scripts. Evidence records, concept cards, reflection, and handoff state are integrated into one main template rather than split into several active documents. Large evidence collections, search logs, calculation results, or drafts become attachments only when keeping them in the main workspace would impair readability.
-
 ## Installation and Invocation
 
-Install the complete `deep-inquiry-workbench` directory in the Skills directory supported by the target agent. A common local Codex installation is:
+A common local Codex installation is:
 
 ```text
 git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.codex/skills/deep-inquiry-workbench
@@ -232,7 +303,38 @@ Natural-language invocation:
 Do not give me only a final answer. Help me investigate this question systematically and keep a persistent record of how our understanding changes.
 ```
 
-Agent platforms differ in automatic Skill discovery, local file links, and write permissions. The full workflow requires an agent that can read the Skill resources and create and update Markdown files in the user's workspace.
+Agent platforms differ in automatic Skill discovery, resource access, local file links, and write permissions. The full workflow requires an agent that can read `SKILL.md` and its resources and create and update Markdown files in the user's workspace.
+
+## Skill Repository Structure
+
+```text
+deep-inquiry-workbench/
+├── SKILL.md
+├── README.md
+├── README.en.md
+├── LICENSE
+├── NOTICE
+├── CONTRIBUTING.md
+└── resources/
+    ├── user_guide.md
+    └── workspace_template.md
+```
+
+- `SKILL.md`: The complete decision protocol executed by the agent. All rules that materially affect behavior remain here.
+- `resources/user_guide.md`: The complete user guide written into the workspace on first start.
+- `resources/workspace_template.md`: The authoritative workspace template.
+
+Version 1 requires no scripts. Evidence records, concept cards, reflection, and handoff state are integrated into one main template. Only large materials are separated into project subdirectories when needed.
+
+## Integration of the Two Prototypes
+
+The project uses the thematic workspace, stable identifiers, evidence checking, decision gates, and handoff mechanism of `conduct-humanities-ai-research` as its engineering foundation. It also preserves the distinctive contributions of `human-ai-research-os`: clear warnings about fluency, agreement, bias, and context decay, together with four kinds of change, concept formation, failed paths, and metacognitive calibration.
+
+The integration makes three important changes:
+
+1. It generalizes the workflow from humanities research to inquiry about any question.
+2. It emphasizes AI as a capable, bounded, and verifiable inquiry tool.
+3. It replaces fixed stages, mandatory objection, and turn-by-turn forms with a dynamic workflow driven by the current gap in understanding.
 
 ## License and Contributions
 
@@ -241,42 +343,14 @@ This is a **source-available project with limited permission**. It is not open-s
 - Individuals and organizations that qualify under the license may install and invoke the unmodified Skill for noncommercial purposes.
 - Commercial use, publication of modified versions, independent derivative projects, and redistribution outside GitHub's own functionality are not permitted.
 - GitHub's rules for public repositories allow viewing and forking on the platform. A fork does not grant permission for commercial use, independent publication of a modified version, or redistribution outside GitHub.
-- Issues and contributions to the official repository are welcome. The limited permission to prepare a contribution and the terms for submitted contributions are in [CONTRIBUTING.md](CONTRIBUTING.md).
+- Issues and contributions to the official repository are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-The project uses the [PolyForm Strict License 1.0.0](LICENSE), with `ChongLiuPhil` as the copyright holder. The license permits noncommercial use but does not grant permission to modify or distribute the project. This section is a summary; if there is any difference, the complete text of `LICENSE` and `CONTRIBUTING.md` controls.
-
-## Continuation Across Agents
-
-A new agent first reads `workspace.md`, then checks the original entries relevant to the current task. The handoff summary is a state snapshot; it does not replace detailed evidence, constraints, or confirmed decisions.
-
-One agent continues the inquiry by default. Additional agents are used only for genuinely independent review, role separation, clearly separable parallel work, or an explicit user request. Agreement among multiple agents is not evidence and is not decided by vote.
-
-## How the Two Prototypes Were Integrated
-
-The project uses the more mature engineering structure of `conduct-humanities-ai-research` as its foundation:
-
-- A workspace organized by themes.
-- Stable Q/C/E/O/N/D identifiers.
-- Independent status dimensions.
-- Evidence checking, explicit decision gates, learning from failed paths, and a handoff summary for new agents.
-
-It also preserves the distinctive contributions of `human-ai-research-os`:
-
-- A first-start guide that develops judgment about AI output.
-- Clear warnings about fluency, excessive agreement, bias, and loss of context.
-- Records of four kinds of change—confirmation, revision, a valuable candidate introduced by AI, and deeper understanding after the user rejects an AI suggestion—together with the formation of concepts and reasons for abandoning paths.
-- Recognition that choosing, revising, and abandoning paths are forms of higher-level cognitive work.
-
-The integration makes three important changes:
-
-1. It generalizes the workflow from humanities research to inquiry about any question.
-2. It replaces the idea of an equal AI research partner with an emphasis on AI as a capable, bounded, and verifiable inquiry tool.
-3. It replaces fixed stages, mandatory objection, and turn-by-turn forms with a dynamic workflow driven by the current gap in understanding.
+The project uses the [PolyForm Strict License 1.0.0](LICENSE), with `ChongLiuPhil` as the copyright holder. This section is a summary; if there is any difference, the complete text of `LICENSE` and `CONTRIBUTING.md` controls.
 
 ## Limitations
 
-- Without write permission, the Skill can only produce a structured update to be saved later; it cannot maintain local state itself.
-- The workspace reduces loss of context, but it cannot guarantee that every agent will interpret or follow the protocol correctly.
-- Evidence quality still depends on the sources, tools, time, and verification methods that are actually available.
-- For medical, legal, financial, security, and other high-risk questions, the workflow does not replace qualified human professional judgment.
-- Public visibility cannot technically prevent copying and does not replace legal enforcement. The license defines the permission boundary.
+- Without write permission, the Skill can only produce structured content to be saved later; it cannot maintain local state itself.
+- The workspace reduces context decay but cannot guarantee that every agent will interpret or follow the protocol correctly.
+- Evidence quality still depends on the sources, tools, time, and verification methods actually available.
+- Medical, legal, financial, security, and other high-risk questions still require current authoritative sources and qualified human professional judgment.
+- Public visibility cannot technically prevent copying. The license defines the permission boundary.
