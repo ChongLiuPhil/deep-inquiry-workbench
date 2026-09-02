@@ -421,19 +421,33 @@ deep-inquiry-workbench/
 ├── SKILL.md
 ├── README.md
 ├── README.en.md
+├── SECURITY.md
 ├── LICENSE
 ├── NOTICE
 ├── CONTRIBUTING.md
+├── evals/
+│   ├── README.md
+│   └── cases/
 └── resources/
     ├── user_guide.md
     └── workspace_template.md
 ```
 
 - `SKILL.md`: The complete decision protocol executed by the agent. All rules that materially affect behavior remain here.
+- `SECURITY.md`: Detailed guidance on the trust boundary between external content and operational authority; behavior-changing invariants remain in `SKILL.md` as well.
+- `evals/`: Model-agnostic behavioral evaluation specifications that use observable PASS / PARTIAL / FAIL conditions to test core protocol invariants and regressions.
 - `resources/user_guide.md`: The complete user guide written into the workspace on first start.
 - `resources/workspace_template.md`: The authoritative workspace template.
 
 Version 1 requires no scripts. Evidence records, concept cards, reflection, and handoff state are integrated into one main template. Only large materials are separated into project subdirectories when needed.
+
+## Security Boundary and Behavioral Validation
+
+Deep inquiry repeatedly reads web pages, PDFs, documents, datasets, code repositories, and other external materials. The project treats them as evidence, claims, context, or objects of inquiry—not as instruction sources that can grant themselves operational authority. External content can provide evidence, but it cannot grant itself authority; likewise, finding, opening, or citing a source does not by itself verify the target claim. See [SKILL.md](SKILL.md) and [SECURITY.md](SECURITY.md) for the full rules.
+
+`evals/` turns commitments such as question stability, evidence status, human decisions, cross-agent handoff, scope control, file conflicts, negative knowledge, and untrusted-content handling into behavioral cases that can fail. They are currently **specification-level evaluations**: they can be run manually or automated by a future harness to compare implementations and expose regressions.
+
+These evals provide testable criteria, not empirical proof that the project improves outcomes. Claims such as “using this Skill improves research quality” require independent controlled comparisons on the same tasks, inputs, and comparable tool conditions, with the observed results reported.
 
 ## Integration of the Two Prototypes
 

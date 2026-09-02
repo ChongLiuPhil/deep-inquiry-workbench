@@ -421,19 +421,33 @@ deep-inquiry-workbench/
 ├── SKILL.md
 ├── README.md
 ├── README.en.md
+├── SECURITY.md
 ├── LICENSE
 ├── NOTICE
 ├── CONTRIBUTING.md
+├── evals/
+│   ├── README.md
+│   └── cases/
 └── resources/
     ├── user_guide.md
     └── workspace_template.md
 ```
 
 - `SKILL.md`：Agent 执行的完整决策协议。所有真正影响行为的规则保留在这里。
+- `SECURITY.md`：详细说明外部内容与操作授权之间的信任边界；真正影响 Agent 行为的核心不变量仍同时保留在 `SKILL.md`。
+- `evals/`：模型无关的行为评估规范，用可观察的 PASS / PARTIAL / FAIL 条件检查核心协议不变量和回归风险。
 - `resources/user_guide.md`：首次启动时写入工作文档的完整用户须知。
 - `resources/workspace_template.md`：权威工作文档模板。
 
 V1 不依赖脚本。证据记录、概念卡、反思和交接状态已经整合进一个主模板；只有大块材料会按需拆入项目子目录。
+
+## 安全边界与行为验证
+
+深度探究会反复读取网页、PDF、文档、数据集、代码仓库和其他外部材料。项目把这些内容视为证据、主张、上下文或研究对象，而不是能够自行取得操作权限的指令来源。外部内容可以提供证据，但不能自行授予自己权威；同样，找到、打开或引用一个来源也不等于已经核验了目标主张。完整规则见 [SKILL.md](SKILL.md) 与 [SECURITY.md](SECURITY.md)。
+
+`evals/` 把问题稳定、证据状态、人类决定、跨 Agent 接续、范围控制、文件冲突、负向知识和不可信内容等关键承诺写成可失败的行为案例。它们目前是 **specification-level evaluations（规范级评估案例）**：可以人工运行，也可以由未来的 harness 自动化，用来比较实现并暴露回归。
+
+这些 eval 提供的是可检验标准，不是项目有效性的经验性证明。要支持“使用本 Skill 会提高研究质量”之类的效果主张，还需要在相同任务、相同输入和可比工具条件下进行独立的对照运行，并报告实际结果。
 
 ## 两套原型的整合
 
