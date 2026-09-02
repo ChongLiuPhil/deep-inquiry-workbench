@@ -1,0 +1,33 @@
+schema_version: 1
+id: deep-inquiry-workbench
+repository: ChongLiuPhil/deep-inquiry-workbench
+visibility: public
+
+title:
+  zh: 深度探究工作台
+  en: Deep Inquiry Workbench
+
+kind: research-tool
+status: active
+
+areas: []
+topics:
+  - research-methodology
+  - ai-assisted-inquiry
+  - evidence-evaluation
+  - epistemic-practice
+
+source_of_truth:
+  overview: README.md
+  protocol: SKILL.md
+  contribution_policy: CONTRIBUTING.md
+  license: LICENSE
+
+website:
+  metadata: website.yaml
+  default_publish: false
+
+notes: >
+  Public standalone project. Public repository visibility does not automatically imply
+  inclusion on the academic homepage; website publication remains explicitly controlled
+  by website.yaml.
