@@ -285,25 +285,134 @@ The user may still invoke the Skill explicitly for any task.
 
 ## Installation and Invocation
 
-A common local Codex installation is:
+This project uses the open `SKILL.md` directory format. Any agent or agent harness—the runtime that supplies the model, tools, permissions, and context—can run the full workflow if it can read the Skill directory and its supporting files and can read and write Markdown in the active project.
 
-```text
-git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.codex/skills/deep-inquiry-workbench
+The compatibility information below was checked against official platform documentation on **2026-09-02**. Platform capabilities and directory conventions may change; when they differ, follow the latest official documentation linked below.
+
+### Recommended: install once and use across projects
+
+Codex, Cursor, GitHub Copilot, Gemini CLI, OpenCode, OpenHands, and Devin Desktop / Cascade can all discover the following shared location natively:
+
+macOS / Linux:
+
+```bash
+mkdir -p ~/.agents/skills
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.agents/skills/deep-inquiry-workbench
 ```
 
-Explicit invocation:
+Windows PowerShell:
 
-```text
-$deep-inquiry-workbench Help me investigate: Why ...?
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.agents\skills"
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git "$HOME\.agents\skills\deep-inquiry-workbench"
 ```
 
-Natural-language invocation:
+A user-level installation stores only the Skill itself. When invoked, the agent should still treat the topic folder currently open as the inquiry project and create or update `workspace.md` at that project root, rather than writing inquiry content into the Skill installation directory.
 
-```text
-Do not give me only a final answer. Help me investigate this question systematically and keep a persistent record of how our understanding changes.
+For a single project, install it at project scope instead:
+
+```bash
+mkdir -p .agents/skills
+git clone --depth 1 https://github.com/ChongLiuPhil/deep-inquiry-workbench.git .agents/skills/deep-inquiry-workbench
 ```
 
-Agent platforms differ in automatic Skill discovery, resource access, local file links, and write permissions. The full workflow requires an agent that can read `SKILL.md` and its resources and create and update Markdown files in the user's workspace.
+A project-local copy is for local use within the license only and must not be committed or republished with another project. To avoid accidental redistribution, add `.agents/skills/deep-inquiry-workbench/` to that project's `.gitignore`.
+
+### Platforms with native `SKILL.md` support
+
+| Platform | User-level location | Project-level location | Invocation and differences |
+|---|---|---|---|
+| [OpenAI Codex / ChatGPT Desktop](https://developers.openai.com/codex/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | In Codex, type `$deep-inquiry-workbench` or let matching activate it automatically; in ChatGPT Desktop, select it under Skills. Standalone Skills work in Desktop, Codex CLI, and the IDE extension. Installable distribution to ChatGPT web and mobile requires Plugin packaging. |
+| [Claude Code](https://code.claude.com/docs/en/skills) | `~/.claude/skills/deep-inquiry-workbench/` | `.claude/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench` or trigger it with natural language. Claude Code does not use `.agents/skills` as its primary location, so install directly under `.claude/skills` or create a symlink there to the shared installation. |
+| [Cursor](https://cursor.com/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.cursor/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.cursor/skills/...` | Type `/deep-inquiry-workbench`, attach it with `@`, or let Agent select it. Remote and Cloud Agents do not inherit local user directories, so use a project-level installation there. |
+| [GitHub Copilot](https://docs.github.com/en/copilot/reference/customization-cheat-sheet) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.copilot/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.github/skills/...` | Use `/deep-inquiry-workbench` on Copilot surfaces that support Agent Skills, or let Copilot select it. Agent Skills support is not identical across every IDE and GitHub surface. |
+| [Gemini CLI](https://geminicli.com/docs/cli/using-agent-skills/) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.gemini/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.gemini/skills/...` | You can run `gemini skills install https://github.com/ChongLiuPhil/deep-inquiry-workbench`; check with `/skills list`, then ask it to “use deep-inquiry-workbench to investigate ...”. Activation may require confirmation. |
+| [Google Antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | Mention the Skill by name or let Agent invoke it automatically. Legacy `.agent/skills` remains compatible, but new projects should use `.agents/skills`. With the [Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/), pass this Skill directory or its parent through `LocalAgentConfig.skills_paths`. |
+| [Cline](https://github.com/cline/cline/blob/main/docs/customization/skills.mdx) | `~/.cline/skills/deep-inquiry-workbench/` | `.cline/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench` or let Cline match the description. Cline also reads project `.claude/skills`, but its user-level location is `.cline/skills`. |
+| [Devin Desktop / Cascade (formerly Windsurf)](https://docs.devin.ai/desktop/cascade/skills) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.codeium/windsurf/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.windsurf/skills/...` | Type `@deep-inquiry-workbench` or let the model invoke it automatically. Current Devin Desktop preserves the Windsurf locations and explicitly supports the shared `.agents/skills` directories. |
+| [Kiro](https://kiro.dev/docs/skills/) | `~/.kiro/skills/deep-inquiry-workbench/` | `.kiro/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench` or let Agent invoke it automatically. Kiro's GitHub import UI requires a URL to a Skill subdirectory rather than a repository root; for this project, import the local folder or clone directly to the location above. |
+| [Qwen Code](https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/) | `~/.qwen/skills/deep-inquiry-workbench/` | `.qwen/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench`, select it in the `/skills` panel, or let the model invoke it automatically. Normal sessions watch for file changes; bare mode requires a restart. |
+| [OpenCode](https://opencode.ai/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.config/opencode/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.opencode/skills/...` | Ask explicitly to “use deep-inquiry-workbench ...”; the agent loads it through the `skill` tool. If it is missing, check that Skill permission is not set to `deny`. |
+| [OpenHands](https://docs.openhands.dev/overview/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | Start a new conversation and ask naturally to use the Skill. OpenHands first reads its name and description, then loads the body and resources on demand; start a new conversation after changing Skill files so the catalog is rebuilt. |
+
+Platforms that do not read the shared location can be installed directly with:
+
+```bash
+mkdir -p ~/.claude/skills ~/.cline/skills ~/.gemini/config/skills ~/.kiro/skills ~/.qwen/skills
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.claude/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.cline/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.gemini/config/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.kiro/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.qwen/skills/deep-inquiry-workbench
+```
+
+Run only the `git clone` line for the platform you use. On Windows, use `$HOME\.claude\skills`, `$HOME\.cline\skills`, `$HOME\.gemini\config\skills`, `$HOME\.kiro\skills`, or `$HOME\.qwen\skills` in PowerShell and create the corresponding parent directory first.
+
+If the Skill is already installed in `~/.agents/skills/`, symlinks avoid maintaining duplicate copies:
+
+```bash
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.claude/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.cline/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.gemini/config/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.kiro/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.qwen/skills/deep-inquiry-workbench
+```
+
+Update an installed upstream copy with:
+
+```bash
+git -C ~/.agents/skills/deep-inquiry-workbench pull --ff-only
+```
+
+If the Skill is installed elsewhere, replace the path with its actual location. `--ff-only` prevents the update from silently creating a locally modified variant.
+
+### Agent harness and SDK integration
+
+If you are building an agent rather than using one of the desktop or command-line products above, load the Skill explicitly as part of the runtime. In every SDK, keep the Skill directory read-only or subject to controlled writes, while giving the separate inquiry project directory read/write access and using it as the location for `workspace.md`.
+
+- **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/sandbox/guide/)**: Sandbox Agents provide a native `Skills` capability. For a larger local collection, use `Skills(lazy_from=LocalDirLazySkillSource(...))` so the body loads only after activation; `Skills(from_=GitRepo(...))` can load from a Git repository. Use the SDK capability rather than merely mounting `.agents/skills` as an ordinary folder. The Sandbox Agent interface is currently beta.
+- **[Claude Managed Agents / Claude API](https://platform.claude.com/docs/en/managed-agents/skills)**: package this repository as a ZIP, create a custom Skill through the Skills API, and place the returned `skill_id` in the agent's `skills` array. A session that mounts an application GitHub repository can also scan `.claude/skills/<skill-name>/SKILL.md` at that repository root. Because this project's `SKILL.md` is at its own repository root, mounting this repository alone does not match that discovery path; use ZIP upload, or place it under the application repository's `.claude/skills/deep-inquiry-workbench/` in a local environment permitted by the license.
+- **[LangChain Deep Agents](https://docs.langchain.com/oss/python/deepagents/skills)**: pass the parent directory containing Skill subdirectories explicitly through `skills=["<parent-directory>"]` in `create_deep_agent(...)`. For an installation at `~/.agents/skills/deep-inquiry-workbench/`, pass `~/.agents/skills/`. The Deep Agents SDK does not automatically scan CLI locations such as `~/.agents/skills`.
+- **[Google Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/)**: pass this Skill directory, or the parent containing multiple Skills, through `LocalAgentConfig.skills_paths`.
+
+In production, the harness should initially index only `name` and `description`, read the full `SKILL.md` only after a match, and then load `resources/` on demand. Treat every Skill source as an instruction source that must be reviewed, and restrict the agent from modifying the Skill itself. Inquiry documents belong in a separate persistent project workspace—not in an SDK cache, the Skill repository, or a temporary sandbox.
+
+### Platforms without native loading of this format
+
+These platforms can still run the workflow, but the user must explicitly tell the agent to read the Skill rather than relying on automatic discovery.
+
+- **[Aider](https://aider.chat/docs/usage/conventions.html)**: it has no native Agent Skills discovery. Use `--read` or `/read` to add `SKILL.md`, `resources/user_guide.md`, and `resources/workspace_template.md` as read-only materials, then use the generic invocation below.
+- **AutoGen, CrewAI, Google ADK, and other file-capable agents or custom harnesses**: as of the check date above, no single native `SKILL.md` discovery method directly matching this project was verified for these runtimes. They can still use the repository by injecting the generic invocation below, or through a thin adapter that first registers `name` and `description`, then reads the complete `SKILL.md` on a match and resolves its relative links into `resources/`. “Adaptable” here does not mean “natively supported.”
+
+[Roo Code](https://github.com/RooCodeInc/Roo-Code) previously loaded `.roo/skills/<name>/SKILL.md` natively, but its official repository has been archived. It is included only as compatibility guidance for an already-vetted local installation, not as a recommended new platform.
+
+### Generic invocation
+
+Native platforms may use their `$`, `/`, or Skill picker, or simply enter:
+
+```text
+Use deep-inquiry-workbench to help me investigate: <your question>.
+Treat the currently open folder as the inquiry project root. Read SKILL.md completely and follow its relative links to the resources actually needed.
+Do not modify the Skill installation directory. Follow the first-start protocol, create or restore workspace.md in the current project, and end every response with the workspace status and path.
+```
+
+After the user guide has already been acknowledged and the project contains `workspace.md`, a shorter continuation prompt is enough:
+
+```text
+Use deep-inquiry-workbench to continue the current inquiry. Read workspace.md first to recover state, then advance the most important current gap in understanding.
+```
+
+### How to tell whether the full workflow is running
+
+A platform needs all of the following capabilities to count as fully compatible:
+
+1. It can read the full `SKILL.md` and load supporting files from `resources/` when needed.
+2. It recognizes the active topic folder as the inquiry project rather than writing content into the Skill installation directory.
+3. It can reread, create, and update `workspace.md` before responding.
+4. It preserves stable identifiers, evidence states, decisions, handoff summaries, and the workspace receipt at the end of every response.
+5. It can access reliable external sources when factual verification is required; without retrieval, it must keep claims pending verification rather than pretending they were checked.
+
+A chat-only platform that cannot read supporting files or write to the active project can still apply the Skill's reasoning principles, but it cannot provide the complete dynamic-workspace workflow.
 
 ## Skill Repository Structure
 

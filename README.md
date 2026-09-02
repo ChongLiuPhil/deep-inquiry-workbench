@@ -285,25 +285,134 @@ Agent 创建工作文档，写入完整用户须知，在聊天中展示精炼�
 
 ## 安装与调用
 
-以 Codex 的常见本地配置为例：
+本项目采用开放的 `SKILL.md` 目录格式。只要 Agent 或 Agent Harness（负责装载模型、工具、权限和上下文的运行环境）能够读取 Skill 目录及其配套文件，并能在当前项目中读写 Markdown，就可以运行完整工作流。
 
-```text
-git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.codex/skills/deep-inquiry-workbench
+下面的兼容信息依据各平台官方文档核对，最后核对日期为 **2026-09-02**。平台能力和目录约定仍可能变化，遇到差异时以链接中的最新官方说明为准。
+
+### 推荐：安装一次，在不同项目中使用
+
+以下公共目录可被 Codex、Cursor、GitHub Copilot、Gemini CLI、OpenCode、OpenHands 和 Devin Desktop / Cascade 原生发现：
+
+macOS / Linux：
+
+```bash
+mkdir -p ~/.agents/skills
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.agents/skills/deep-inquiry-workbench
 ```
 
-显式调用：
+Windows PowerShell：
 
-```text
-$deep-inquiry-workbench 帮我探究：为什么……？
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.agents\skills"
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git "$HOME\.agents\skills\deep-inquiry-workbench"
 ```
 
-也可以使用自然语言：
+全局安装只保存 Skill 本身。调用时，Agent 仍应把你当前打开的主题文件夹作为探究项目，在该文件夹根目录创建和更新 `workspace.md`，而不是把探究内容写进 Skill 的安装目录。
 
-```text
-请不要只给一个答案，协助我系统探究这个问题，并持续记录我们的理解。
+如果只想让某一个项目使用，也可以安装到项目目录：
+
+```bash
+mkdir -p .agents/skills
+git clone --depth 1 https://github.com/ChongLiuPhil/deep-inquiry-workbench.git .agents/skills/deep-inquiry-workbench
 ```
 
-不同 Agent 平台对 Skill 自动发现、资源读取、本地链接和写入权限的支持不同。完整体验需要 Agent 能读取 `SKILL.md` 及其资源，并在用户工作区创建和更新 Markdown 文件。
+项目内安装的副本仅供许可范围内的本地使用，不应随其他项目提交或重新发布。为了避免误提交，可把 `.agents/skills/deep-inquiry-workbench/` 加入该项目的 `.gitignore`。
+
+### 原生支持 `SKILL.md` 的平台
+
+| 平台 | 用户级安装位置 | 项目级安装位置 | 调用方式与差异 |
+|---|---|---|---|
+| [OpenAI Codex / ChatGPT Desktop](https://developers.openai.com/codex/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | Codex 输入 `$deep-inquiry-workbench`，或让系统按描述自动调用；ChatGPT Desktop 可在 Skills 中选择。独立 Skill 可用于 Desktop、Codex CLI 和 IDE；ChatGPT 网页与移动端的可安装分发需要打包为 Plugin。 |
+| [Claude Code](https://code.claude.com/docs/en/skills) | `~/.claude/skills/deep-inquiry-workbench/` | `.claude/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，或用自然语言触发。Claude Code 不把 `.agents/skills` 作为主要目录，因此应直接安装到 `.claude/skills`，或从那里建立指向公共安装的符号链接。 |
+| [Cursor](https://cursor.com/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.cursor/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.cursor/skills/...` | 输入 `/deep-inquiry-workbench`，使用 `@` 附加，或由 Agent 自动选择。远程与 Cloud Agent 不会继承本机用户目录，应采用项目级安装。 |
+| [GitHub Copilot](https://docs.github.com/en/copilot/reference/customization-cheat-sheet) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.copilot/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.github/skills/...` | 在支持 Agent Skills 的 Copilot 界面中使用 `/deep-inquiry-workbench`，或让 Copilot 自动选择。不同 IDE 和 GitHub 界面对 Agent Skills 的支持程度并不完全相同。 |
+| [Gemini CLI](https://geminicli.com/docs/cli/using-agent-skills/) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.gemini/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.gemini/skills/...` | 可直接运行 `gemini skills install https://github.com/ChongLiuPhil/deep-inquiry-workbench`；用 `/skills list` 检查，然后要求“使用 deep-inquiry-workbench 探究……”。激活 Skill 时可能要求确认。 |
+| [Google Antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | 直接提及 Skill 名称或让 Agent 自动调用；旧版 `.agent/skills` 仍兼容，但新项目使用 `.agents/skills`。使用 [Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/) 时，在 `LocalAgentConfig.skills_paths` 中传入本 Skill 目录或其父目录。 |
+| [Cline](https://github.com/cline/cline/blob/main/docs/customization/skills.mdx) | `~/.cline/skills/deep-inquiry-workbench/` | `.cline/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，或让 Cline 按描述调用。Cline 也读取项目中的 `.claude/skills`，但用户级安装应使用 `.cline/skills`。 |
+| [Devin Desktop / Cascade（原 Windsurf）](https://docs.devin.ai/desktop/cascade/skills) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.codeium/windsurf/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.windsurf/skills/...` | 输入 `@deep-inquiry-workbench`，或让模型自动调用。当前 Devin Desktop 保留 Windsurf 目录，并明确支持公共 `.agents/skills` 目录。 |
+| [Kiro](https://kiro.dev/docs/skills/) | `~/.kiro/skills/deep-inquiry-workbench/` | `.kiro/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，或让 Agent 自动调用。Kiro 的 GitHub 导入界面要求 URL 指向仓库中的 Skill 子目录而不是仓库根目录；本项目应使用本地文件夹导入或直接克隆到上述目录。 |
+| [Qwen Code](https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/) | `~/.qwen/skills/deep-inquiry-workbench/` | `.qwen/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，在 `/skills` 面板中选择，或让模型自动调用。普通会话会自动发现文件变化；bare mode 需要重启。 |
+| [OpenCode](https://opencode.ai/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.config/opencode/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.opencode/skills/...` | 直接要求“使用 deep-inquiry-workbench……”，Agent 会通过 `skill` 工具载入；如果没有出现，检查 Skill 权限是否被设为 `deny`。 |
+| [OpenHands](https://docs.openhands.dev/overview/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | 新建会话后用自然语言要求使用该 Skill。OpenHands 会先读取名称和描述，再按需载入正文和资源；修改 Skill 后应新建会话以重建目录。 |
+
+不读取公共目录的平台可以分别这样安装：
+
+```bash
+mkdir -p ~/.claude/skills ~/.cline/skills ~/.gemini/config/skills ~/.kiro/skills ~/.qwen/skills
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.claude/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.cline/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.gemini/config/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.kiro/skills/deep-inquiry-workbench
+git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.qwen/skills/deep-inquiry-workbench
+```
+
+这里只需执行与你所用平台对应的一条 `git clone`。Windows 用户在 PowerShell 中使用 `$HOME\.claude\skills`、`$HOME\.cline\skills`、`$HOME\.gemini\config\skills`、`$HOME\.kiro\skills` 或 `$HOME\.qwen\skills`，并先创建相应的父目录。
+
+如果已经安装在 `~/.agents/skills/`，也可以用符号链接避免维护多个副本：
+
+```bash
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.claude/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.cline/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.gemini/config/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.kiro/skills/deep-inquiry-workbench
+ln -s ~/.agents/skills/deep-inquiry-workbench ~/.qwen/skills/deep-inquiry-workbench
+```
+
+更新已安装的原版 Skill：
+
+```bash
+git -C ~/.agents/skills/deep-inquiry-workbench pull --ff-only
+```
+
+如果安装在其他平台目录，把命令中的路径替换成实际安装位置。使用 `--ff-only` 可以避免更新过程悄然生成本地修改版本。
+
+### Agent Harness 与 SDK 接入
+
+如果你正在开发自己的 Agent，而不是直接使用上面的桌面或命令行产品，需要把 Skill 作为运行环境的一部分显式装载。无论使用哪一种 SDK，都应同时满足两点：Skill 目录对 Agent 只读或受控可写；探究项目目录可读写，并作为 `workspace.md` 的保存位置。
+
+- **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/sandbox/guide/)**：Sandbox Agent 原生提供 `Skills` 能力。较大的本地 Skill 集合适合使用 `Skills(lazy_from=LocalDirLazySkillSource(...))`，只在触发后载入正文；也可以用 `Skills(from_=GitRepo(...))` 从 Git 仓库装载。不要只把 `.agents/skills` 当普通文件夹挂进去，应使用 SDK 的 `Skills` 能力完成发现和按需载入。该 Sandbox Agent 接口目前仍是 beta。
+- **[Claude Managed Agents / Claude API](https://platform.claude.com/docs/en/managed-agents/skills)**：可以把本仓库打包为 ZIP，通过 Skills API 创建自定义 Skill，再把返回的 `skill_id` 放入 Agent 的 `skills` 列表。若会话挂载的是业务 GitHub 仓库，Claude 也会扫描该仓库根目录下的 `.claude/skills/<skill-name>/SKILL.md`；本项目的 `SKILL.md` 位于自身仓库根目录，因此直接挂载本仓库并不会符合这条自动扫描路径，宜采用 ZIP 上传，或在许可允许的本地环境中把它放入业务仓库的 `.claude/skills/deep-inquiry-workbench/`。
+- **[LangChain Deep Agents](https://docs.langchain.com/oss/python/deepagents/skills)**：在 `create_deep_agent(...)` 中通过 `skills=["<包含各 Skill 子目录的父目录>"]` 显式传入来源。例如安装在 `~/.agents/skills/deep-inquiry-workbench/` 时，传入 `~/.agents/skills/`。Deep Agents SDK 不会自动扫描 CLI 的 `~/.agents/skills`，必须在代码中传入。
+- **[Google Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/)**：在 `LocalAgentConfig.skills_paths` 中传入本 Skill 目录，或传入包含多个 Skill 的父目录。
+
+对于生产环境，还应让 Harness 在启动时只索引 `name` 和 `description`，命中任务后再读取完整 `SKILL.md`，随后按需读取 `resources/`；同时把 Skill 来源视为需要审查的指令来源，并限制 Agent 修改 Skill 本身。探究产生的文档应保存在独立的项目工作区，而不是保存在 SDK 缓存、Skill 仓库或临时沙箱中。
+
+### 尚未原生装载本格式的平台
+
+这类平台仍然可以运行工作流，但需要明确告诉 Agent 读取 Skill，而不能依赖自动发现。
+
+- **[Aider](https://aider.chat/docs/usage/conventions.html)**：没有原生 Agent Skills 发现机制，可用 `--read` 或会话中的 `/read` 把 `SKILL.md`、`resources/user_guide.md` 和 `resources/workspace_template.md` 作为只读材料加入，然后使用下面的通用调用语句。
+- **AutoGen、CrewAI、Google ADK，以及其他能够读取文件的 Agent 或自建 Harness**：截至上述核对日期，没有核实到它们具有与本项目直接对应的统一原生 `SKILL.md` 发现方式。可以把仓库放在运行环境可读取的位置，在任务开始时注入下面的通用调用语句，或实现一个很薄的适配层：先登记 `name` 和 `description`，命中后读取完整 `SKILL.md`，再解析其中指向 `resources/` 的相对路径。这里的“可适配”不等于平台原生支持。
+
+[Roo Code](https://github.com/RooCodeInc/Roo-Code) 曾原生读取 `.roo/skills/<name>/SKILL.md`，但其官方仓库已归档；这里只把它视为既有本地安装的兼容说明，不再作为新的推荐平台。
+
+### 通用调用语句
+
+原生平台可以使用自己的 `$`、`/` 或 Skill 选择器，也可以直接输入：
+
+```text
+使用 deep-inquiry-workbench 协助我探究：<你的问题>。
+把当前打开的文件夹作为探究项目根目录。完整读取 SKILL.md，并按其中的相对路径读取实际需要的资源。
+不要修改 Skill 安装目录；按照首次启动协议，在当前项目中创建或恢复 workspace.md，并在每轮回复末尾报告工作文档状态和地址。
+```
+
+已经确认过用户须知、并且项目中已有 `workspace.md` 时，可以简化为：
+
+```text
+使用 deep-inquiry-workbench 继续当前探究。先读取 workspace.md 恢复状态，再推进当前最关键的理解缺口。
+```
+
+### 判断是否完整运行
+
+平台至少需要具备以下能力，才能称为完整兼容：
+
+1. 能读取完整 `SKILL.md`，并按需读取 `resources/` 中的配套文件。
+2. 能把当前主题文件夹识别为探究项目，而不是把内容写入 Skill 安装目录。
+3. 能在回复前重新读取、创建和更新 `workspace.md`。
+4. 能保留稳定编号、证据状态、决定、交接摘要和每轮工作文档回执。
+5. 需要外部事实时能够访问可靠来源；没有检索能力时，必须保留“待核”，不能假装已经核验。
+
+只有聊天、不能读取配套文件或不能写入当前项目的平台，仍可借鉴本 Skill 的推理原则，但无法提供完整的动态工作文档工作流。
 
 ## Skill 文件结构
 
