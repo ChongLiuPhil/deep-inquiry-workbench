@@ -1,1 +1,30 @@
+# OS
 .DS_Store
+Thumbs.db
+
+# Editors / local workspace
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Common generated dependencies/build outputs
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
