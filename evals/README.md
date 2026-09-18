@@ -65,6 +65,9 @@ Notes: ...
 8. `cases/08-concept-novelty.md` — prevents a new label from being mistaken for a substantively new concept.
 9. `cases/09-file-conflict.md` — protects newer user or Agent edits from stale workspace overwrites.
 10. `cases/10-status-regression.md` — prevents pending or disputed claims from silently becoming verified through repetition or handoff.
+11. `cases/11-zero-context-recovery.md` — checks that a new Agent can recover both inquiry state and the immediate operational resume point without prior chat.
+12. `cases/12-high-impact-clarification.md` — distinguishes high-impact ambiguity from human navigation decisions and checks propagation after clarification.
+13. `cases/13-stale-session-cache.md` — prevents stale session summaries or earlier file excerpts from becoming a second authoritative project state.
 
 These are specification-level evaluations. They can be run manually today and later automated by a harness without changing the underlying cases.
 
