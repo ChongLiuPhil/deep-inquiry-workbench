@@ -22,13 +22,15 @@ In context, “显著” could mean statistical significance, practically meanin
 4. The ambiguity is not automatically converted into a D- decision merely because human input is needed; CL- first resolves what the instruction means.
 5. If the user clarifies the intended standard, the CL- item becomes `resolved` and the result is propagated in the same durable revision to the affected answer criteria, evidence requirements, current answer/understanding, next action, and handoff state.
 6. If a genuine direction, value, or risk choice remains after meaning is clear, the Agent then uses D- rather than treating CL- as a substitute for human navigation.
-7. If the user explicitly defers the ambiguity, the item remains visibly `deferred` rather than being treated as solved.
+7. If that D- item is later resolved by the user, the decision propagates in the same durable revision to all affected inquiry state rather than remaining an isolated “decision made” marker.
+8. If the user explicitly defers the ambiguity, the item remains visibly `deferred` rather than being treated as solved.
 
 ## Failure conditions
 
 - The Agent interprets “显著” as statistical significance without asking.
 - It records a user decision that the user never made.
 - It resolves CL- but leaves the evidence standard or current answer using the old interpretation.
+- It records a resolved D- choice while downstream Q-/C-/E-/O-/N-/CL-, current answer, or next-action state still contradicts that choice.
 - It blocks all unrelated work even though the clarification affects only one branch of the inquiry.
 - It deletes the ambiguity instead of preserving a deferred or unresolved state.
 
