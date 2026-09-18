@@ -1,5 +1,11 @@
 # Deep Inquiry Workbench（深度探究工作台）
 
+<!-- bilingual-home-intro -->
+> **English:** A reusable deep-inquiry skill for AI agents that makes reasoning, evidence evaluation, criticism, uncertainty, and documentation explicit during sustained investigation.
+>
+> **中文：** 一个可供不同 AI Agent 调用的通用深度探究 Skill，通过显式化推理、证据判断、批判、不确定性与文档协议来支持持续探究。
+<!-- /bilingual-home-intro -->
+
 [中文](README.md) | [English](README.en.md)
 
 Deep Inquiry Workbench 是一个供不同 AI Agent 调用的通用深度探究 Skill。它通过明确的推理、证据、批判和文档协议，尽可能释放 AI 在材料阅读、知识检索、解释比较、反例生成、事实核验、概念分析和成果整合方面的能力。
