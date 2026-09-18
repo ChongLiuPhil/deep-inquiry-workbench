@@ -1,347 +1,341 @@
-# Deep Inquiry Workbench（深度探究工作台）
+# Deep Inquiry Workbench
 
-<!-- bilingual-home-intro -->
-> **English:** A reusable deep-inquiry skill for AI agents that makes reasoning, evidence evaluation, criticism, uncertainty, and documentation explicit during sustained investigation.
->
-> **中文：** 一个可供不同 AI Agent 调用的通用深度探究 Skill，通过显式化推理、证据判断、批判、不确定性与文档协议来支持持续探究。
-<!-- /bilingual-home-intro -->
+[English](README.md) | [中文](README.zh-CN.md)
 
-[中文](README.md) | [English](README.en.md)
+Deep Inquiry Workbench is a general-purpose deep-inquiry Skill for different AI agents. Through explicit reasoning, evidence, criticism, and documentation protocols, it expands what AI can do in close reading, knowledge search, comparison of explanations, counterexample generation, fact-checking, concept analysis, and synthesis.
 
-Deep Inquiry Workbench 是一个供不同 AI Agent 调用的通用深度探究 Skill。它通过明确的推理、证据、批判和文档协议，尽可能释放 AI 在材料阅读、知识检索、解释比较、反例生成、事实核验、概念分析和成果整合方面的能力。
+Its purpose is not to make AI produce longer answers. It is to reduce answers that are fluent but untested, agreeable to the user, or comprehensive in appearance without adding explanatory value. It turns AI from a one-shot text generator into an inquiry tool that can pursue a concrete question over time, draw on human knowledge resources, and preserve the evolution of understanding.
 
-它不是让 AI 生成更长的回答，而是让 AI 更少给出流畅却未经检验、迎合用户、面面俱到却没有解释增量的回答。它把 AI 由一次性文本生成器转变为可以持续推进具体问题、调用人类知识资源并保存理解演变的探究工具。
+At the same time, the workflow keeps evidence assessment, concept boundaries, jumps in reasoning, competing explanations, and uncertainty visible. As users repeatedly encounter these acts of judgment in real inquiries, their language judgment, evidence awareness, and ability to think about knowledge can develop naturally. The educational effect is integrated into inquiry rather than replacing it.
 
-与此同时，这套工作方式会把证据判断、概念边界、推理跳跃、竞争解释和不确定性保持可见。使用者在真实探究中反复接触这些判断活动，语言判断力、证据意识和知识思考能力会自然得到训练。教育作用融入探究，而不是取代探究。
+## Why This Skill Is Needed
 
-## 为什么需要这个 Skill
+AI can already produce large amounts of coherent text quickly. But coherence is not understanding, and completeness is not reliability. Ordinary AI conversations often fail in the following ways.
 
-AI 已经能够快速生成大量连贯文本，但连贯不等于理解，完整不等于可靠。普通 AI 对话经常出现以下问题：
+### Fluency creates an illusion of correctness
 
-### 流畅性制造正确性的错觉
+The more natural, detailed, and confident an answer sounds, the easier it is to treat it as established knowledge. Yet language models are first of all good at generating text that fits linguistic patterns. Whether the premises are true, the reasoning is valid, the information has a source, or one explanation is better than its alternatives must be checked separately.
 
-回答越自然、越详细、越自信，人越容易把它当成已经成立的知识。但语言模型首先擅长的是生成符合语言模式的文本。前提是否成立、推理是否有效、信息是否有来源、解释是否优于其他解释，都需要另外检查。
+### Agreement with the user's existing position
 
-### 迎合用户已有立场
+AI often continues along the direction already implied by the question and mistakes repetition or elaboration for support. This can reinforce confirmation bias—the tendency to notice information that supports an existing view—and quickly give an untested intuition the appearance of a complete argument.
 
-AI 容易沿着提问者已经表达的方向继续论证，把重复和扩写误当成支持。这会强化确认偏误——只注意支持既有判断的信息——并使一个尚未经过检验的直觉迅速获得完整论证的外观。
+### Bland but safe answers
 
-### 给出平庸而安全的答案
+Many answers appear balanced, broad, and low-risk but never identify the real disagreement, key mechanism, or evidence that would change the conclusion. They may summarize several positions without producing a new distinction or explanation.
 
-许多回答表面均衡、覆盖全面、很少出错，却没有指出真正的分歧、关键机制或能够改变判断的证据。它们可能总结了各方立场，却没有带来新的区分和解释。
+### Mixing different kinds of statements
 
-### 把不同性质的说法混在一起
+Facts, attribution of theories, interpretation, speculation, value judgments, and original synthesis require different forms of checking. Ordinary answers often present them in one uniform tone of certainty, leaving readers unable to tell what has been verified and what is only a plausible conjecture.
 
-事实、理论归属、解释、推测、价值判断和原创综合需要不同的检查方法。普通回答经常把它们写在同一段确定语气中，使读者无法判断什么已经核实、什么只是合理猜测。
+### Replacing evidence with confidence or the appearance of citation
 
-### 用自信或引用外观代替证据
+Model memory, confident language, agreement among multiple models, and AI-generated references are not evidence by themselves. Precise titles, page numbers, and quotations may also be candidate information completed from language patterns rather than details that were actually checked.
 
-模型记忆、自信语气、多个模型给出相似答案或 AI 生成的参考文献，都不能直接成为证据。精确的书名、页码和引文也可能是根据语言模式补出的候选信息。
+### Losing the question and its constraints in long conversations
 
-### 在长对话中丢失问题和限定
+As a conversation grows, early materials, concept definitions, corrections, and scope limits may fade. The AI may also rewrite the core question without saying so, producing later answers that no longer address the original inquiry.
 
-随着对话延长，早期材料、概念定义、用户纠正和范围限制可能逐渐消失。AI 还可能在没有明确说明的情况下改写核心问题，使后面的答案已经不再回答最初的问题。
+### Over-answering or over-operating
 
-### 过度回答或过度操作
+AI may treat “this might help” as permission to add features, files, topics, or external actions. In the opposite direction, it may use the fear of overstepping as a reason to do superficial work and omit analysis or verification that the goal actually requires.
 
-AI 可能把“也许有帮助”当作扩展任务的理由，擅自增加功能、文件、论题或外部动作。反过来，它也可能以避免越界为由只做表面工作，省略完成目标所必需的分析和核验。
+Deep Inquiry Workbench is designed to change the AI's behavior around these structural problems.
 
-Deep Inquiry Workbench 的目标，就是针对这些结构性问题改变 AI 的工作方式。
+## Design Purpose and Core Judgments
 
-## 设计初衷与基本判断
+### Inquiry is the basic process
 
-### 探究是基本过程
+Traditional “learning” is often imagined as absorbing stable knowledge that already exists. Yet existing knowledge is itself the provisional result of earlier inquiry. It has a scope, methods, evidence, and historical conditions, and it may later be revised.
 
-传统的“学习”常被想象为：知识已经以稳定答案存在，学习者只需吸收它。但既有知识本身是前人探究的阶段性成果；它带有范围、方法、证据和历史条件，也可能被修正。
+For that reason, this workflow does not preserve learning as a separate process alongside inquiry. Reading, searching, remembering, practicing, calculating, experimenting, and writing occur naturally when they are needed to answer a concrete question. Learning is integrated into inquiry; inquiry does not turn into “learning through inquiry.”
 
-因此，本工作流不把学习保留为与探究并列的独立流程。阅读、检索、记忆、练习、计算、实验和写作都在回答具体问题时自然发生，并服务于探究。学习融入探究，而不是探究转向“在探究中学习”。
+### The question guides; answers and understanding evolve
 
-### 问题引导，答案与理解持续变化
+What is continually generated, tested, and revised is the answer and the understanding, not the question merely for the sake of appearing to make progress. A question may be clarified, narrowed, or divided into subquestions. A major change to the core question requires explicit confirmation.
 
-持续生成、检验和修正的是答案与理解，不是为了制造进展而不断改写问题。问题可以被澄清、缩小范围或拆出子问题；核心问题的重大改变需要明确确认。
+### AI is an interface to human knowledge resources
 
-### AI 是人类知识资源的接口
+AI does more than offer candidate knowledge already represented in its parameters. It can read user materials, search external resources, use databases and tools, perform calculations and experiments, and organize scattered information into explanations that can be checked further. The Skill makes these abilities part of a continuous, verifiable process centered on one question.
 
-AI 不只提供参数中已经形成的候选知识。它还可以读取用户材料、检索外部资源、使用数据库和工具、执行计算与实验，并把分散信息组织成可以继续检查的解释。Skill 的作用，是让这些能力围绕同一个问题形成连续、可核验的过程。
+### Effective assistance and stronger judgment are two sides of one process
 
-### 实质协助与判断力提升是同一过程的两面
+The Skill must first improve the actual quality of inquiry. AI should perform the reading, searching, organizing, comparing, checking, and synthesis that it can reliably perform rather than merely explaining methods to the user.
 
-本 Skill 首先必须实质提高探究质量。AI 应承担能够可靠完成的阅读、检索、整理、比较、核验和成果整合，而不能只向用户讲解方法。
+At the same time, the workflow does not hide thought behind polished prose. Support for claims, hidden premises, counterexamples, concept boundaries, competing explanations, and uncertainty remain visible. Judgment develops within real inquiries rather than becoming a separate course.
 
-同时，工作流不把思考过程藏在一段成品文字之后。主张依据、隐含前提、反例、概念边界、竞争解释和不确定性保持可见。判断力训练因此发生在真实问题中，而不是成为额外课程。
+## How It Changes AI Answers
 
-## 它怎样改变 AI 的回答方式
-
-| 普通 AI 容易出现的问题 | Skill 采用的机制 | 带来的改变 |
+| Common failure in ordinary AI | Mechanism in the Skill | Resulting change |
 |---|---|---|
-| 回答流畅但未经核验 | 区分说法类型并设置相称的证据门槛 | 不让语言完整性冒充知识可靠性 |
-| 顺着用户立场继续论证 | 先善意重构，再按需进行对抗性检验 | 降低迎合与确认偏误 |
-| 给出面面俱到的平庸答案 | 优先处理最关键的理解缺口 | 让每轮带来真实的解释增量 |
-| 把类比或概念当成证明 | 检查定义、边界、反例和断裂点 | 防止漂亮标签代替解释 |
-| 用模型自信代替来源 | 记录实际访问、核验状态和准确支持范围 | 保持认识诚实 |
-| 强制每轮反驳 | 根据问题状态校准批判强度 | 避免把对抗变成仪式 |
-| 遗忘早期限定或悄然改题 | 动态工作文档、稳定编号和决定记录 | 保持长程连续性与问题稳定 |
-| 只保留成功答案 | 保存被放弃路径带来的认识 | 让失败也能限制和深化当前理解 |
-| 擅自扩展任务或做得过少 | “充分执行但不越界”的行动规则 | 让能力强大而精准可控 |
-| 用户纠正后反复声明限制 | 吸收纠正并自然改变后续行为 | 减少防御性和交流噪声 |
+| Fluent but unverified answers | Classify statement types and apply proportionate evidence requirements | Linguistic completeness no longer substitutes for reliability |
+| Continuing along the user's existing position | Reconstruct fairly, then apply adversarial testing when useful | Less agreement-seeking and confirmation bias |
+| Broad but bland answers | Prioritize the most important gap in understanding | Each turn adds real explanatory value |
+| Treating an analogy or concept as proof | Check definitions, boundaries, counterexamples, and points where the comparison breaks | Attractive labels no longer replace explanation |
+| Treating model confidence as a source | Record actual access, verification status, and the exact scope supported | Greater epistemic honesty |
+| Challenging every claim mechanically | Calibrate the strength of criticism to the inquiry state | Adversarial work does not become a ritual |
+| Forgetting constraints or quietly changing the question | Dynamic workspace, stable identifiers, and decision records | Long-term continuity and question stability |
+| Preserving only successful answers | Record what was learned from abandoned paths | Failure can limit and deepen current understanding |
+| Expanding the task or doing too little | The rule “fully execute without overstepping” | Strong capability remains precisely controllable |
+| Repeating prohibitions after a correction | Absorb corrections into subsequent behavior | Less defensive language and conversational noise |
 
-## 避免迎合与平庸回答
+## Avoiding Agreement-Seeking and Bland Answers
 
-### 先善意重构，再决定怎样检验
+### Reconstruct fairly before deciding how to test
 
-AI 不应立即攻击一个尚未说清楚的想法。它先把用户的意思重述为尽可能清楚、有力的版本，确认真正需要检验的主张，再选择反驳、比较、检索、实验、形式化或概念分析。
+AI should not immediately attack an idea that has not yet been expressed clearly. It first restates the user's meaning in the clearest and strongest reasonable form, identifies the claim that actually needs examination, and then chooses among objection, comparison, search, experiment, formalization, or concept analysis.
 
-这可以避免攻击稻草人——把对方观点简化成更容易反驳的版本——也能防止“批判”只成为显示聪明的姿态。
+This avoids attacking a straw man—a simplified version that is easier to refute—and prevents “criticism” from becoming a performance of cleverness.
 
-### 对抗性检验是提高理解的工具
+### Adversarial testing is a tool for better understanding
 
-当用户提出核心主张、准备采用一个结论或存在明显确认偏误时，AI 应主动寻找：
+When a core claim is being formed, a conclusion is about to be adopted, or confirmation bias is visible, the AI should actively look for:
 
-- 能够真正威胁当前答案的最强反驳。
-- 使结论失效或需要缩小范围的反例。
-- 容易被忽略的边界情况。
-- 同样能够解释材料的竞争解释。
-- 能够区分这些解释的关键证据。
+- The strongest objection that genuinely threatens the current answer.
+- A counterexample that defeats or narrows the conclusion.
+- A boundary case that is easy to overlook.
+- A competing explanation that accounts for the same material.
+- The key evidence that would distinguish among those explanations.
 
-对抗性不是敌对，也不是每轮必须完成的仪式。初步直觉尚未成形时，应先帮助外化和澄清；瓶颈是缺少证据时，应停止重复语言争论，转向寻找证据或承认暂时无法判断。
+Adversarial testing is neither hostility nor a ritual required in every turn. When an intuition is still forming, the AI should first help express and clarify it. When the bottleneck is missing evidence, it should stop repeating verbal disputes and move to evidence or acknowledge that the question cannot yet be settled.
 
-### 不满足于安全、均衡却没有增量的总结
+### Do not settle for safe balance without explanatory gain
 
-Skill 不要求 AI 为形式制造“双方都有道理”。如果证据已经明显倾向某个方向，应直接说明；如果材料不足，也应指出真正缺少什么。每轮优先推进当前问题最关键的理解缺口，而不是机械完成固定步骤或覆盖所有相关话题。
+The Skill does not require the AI to manufacture “both sides have a point.” When evidence clearly favors one direction, it should say so. When the material is insufficient, it should identify what is actually missing. Each turn prioritizes the most important gap in the current understanding rather than mechanically completing fixed steps or covering every related topic.
 
-## 证据、概念与认识诚实
+## Evidence, Concepts, and Epistemic Honesty
 
-### 不同说法采用不同检查方法
+### Different statements require different checks
 
-- 可直接核对的事实和数字，需要当前、可靠并能实际访问的来源。
-- 某位作者或理论的观点，需要回到原文、权威版本和稳定位置。
-- 历史与因果判断，需要材料链条、时间关系和竞争解释。
-- 解释需要说明材料依据、推理过程、反例和适用边界。
-- 推测必须标明推测性质和所需验证。
-- 价值判断需要说明价值前提，不伪装成事实。
-- 原创综合需要说明哪些材料和推理支撑它，不能伪造出处。
+- Directly checkable facts and numbers need current, reliable, actually accessed sources.
+- Claims about an author or theory should return to the original text, an authoritative edition, and a stable location.
+- Historical and causal judgments need chains of material, temporal relations, and competing explanations.
+- Interpretations should identify textual or material anchors, reasoning, counterexamples, and scope.
+- Speculation must be marked as speculation and state what would test it.
+- Value judgments should identify their value premises rather than masquerade as facts.
+- Original synthesis should identify the materials and reasoning that support it rather than inventing an authority.
 
-无法核验时保持“待核”。可靠材料之间仍有冲突时标为“争议”。没有真实访问记录的精确引文、页码、年份和书目信息不能冒充已经核对的来源。
+When verification is unavailable, the item remains pending verification. When reliable sources conflict, it is marked as disputed. Precise quotations, page numbers, dates, and bibliographic details without a real access record must not be presented as checked sources.
 
-### 概念不是漂亮标签
+### Concepts are not decorative labels
 
-新概念只有在确实增加区分力、解释力或可操作性时才值得保留。对核心概念记录定义、必要特征、排除范围、正例、反例、边界案例、与近似概念的关系，以及它具体解决了什么困难。
+A new concept is worth retaining only when it adds real power to distinguish, explain, or guide action. Core concepts record their definition, necessary features, excluded scope, positive examples, counterexamples, boundary cases, nearby concepts, and the specific problem they solve.
 
-旧词已经足够时，新名称只会增加理解负担。术语新颖不等于思想新颖。
+If existing language is sufficient, a new name only adds cognitive burden. Novel terminology is not the same as novel thought.
 
-### 跨领域类比同时记录相似与不同
+### Cross-domain analogies record both similarity and difference
 
-AI 很擅长生成跨领域类比，但相似性本身不是证明。结构比较必须说明哪些关系确实相似、哪些关键条件不同、比较带来了什么解释能力，以及它可能怎样遮蔽差异。
+AI is especially good at generating analogies across domains, but similarity is not proof. A structural comparison must state which relations are genuinely similar, which important conditions differ, what explanatory ability the comparison adds, and how it might conceal differences.
 
-### 被放弃的路径也留下认识
+### Abandoned paths still produce knowledge
 
-一条路径可能因为错误、离题、证据不足、概念负担过重或无法区分竞争解释而被放弃。工作文档不保留所有失败细节，而保存：为什么走不通、它暴露了当前答案的什么边界、什么新证据可能使它值得重新开启。
+A path may be abandoned because it is wrong, irrelevant, unsupported, conceptually expensive, or unable to distinguish competing explanations. The workspace does not preserve every failed detail. It preserves why the path failed, what boundary of the current answer it exposed, and what new evidence might justify reopening it.
 
-## 判断力与元认知校准
+## Judgment and Metacognitive Calibration
 
-本节直接呈现首次使用时需要了解的核心须知。完整的启动版本保存在 [resources/user_guide.md](resources/user_guide.md)，并会在每个探究项目第一次启动时写入工作文档。
+This section presents the core guidance a user should know at first use. The complete startup version is stored in [resources/user_guide.md](resources/user_guide.md) and is written into each inquiry workspace when the project starts.
 
-### 暂缓相信，并查看推理结构
+### Suspend belief and inspect the reasoning structure
 
-面对完整而自信的回答，先暂缓相信或拒绝。把修辞、形容词、术语和权威口吻暂时拿掉，检查：
+When an answer looks complete and confident, temporarily suspend both belief and rejection. Remove the rhetoric, adjectives, terminology, and authoritative tone, then ask:
 
 ```text
-前提是什么？
-这些前提有什么证据？
-从前提到结论经过了什么推理？
-是否遗漏了条件或替代解释？
-结论是否强于证据真正支持的范围？
+What are the premises?
+What evidence supports those premises?
+What reasoning connects the premises to the conclusion?
+Have conditions or alternative explanations been omitted?
+Is the conclusion stronger than the evidence actually supports?
 ```
 
-这种“悬置”不是怀疑一切，而是让相信与证据重新连接。
+This suspension is not universal skepticism. It reconnects belief with evidence.
 
-### 流畅性、自信和共识都不是证明
+### Fluency, confidence, and consensus are not proof
 
-需要主动区分：表达是否自然、推理是否有效、前提是否成立、信息是否有来源、解释是否优于竞争解释、结论是否适用于当前范围。
+Keep separate whether the expression is natural, the reasoning is valid, the premises are true, the information has a source, the explanation outperforms alternatives, and the conclusion fits the current scope.
 
-多个模型给出相似答案，只说明它们可能共享相似训练材料、提示方式或默认表达，不能按票数决定真伪。
+Similar answers from multiple models may reflect shared training material, prompting patterns, or default language. Truth is not decided by a vote among models.
 
-### 警惕迎合、主流偏向和空泛答案
+### Watch for agreement, mainstream defaults, and empty balance
 
-AI 的回答会受到训练材料分布、产品设计、安全调校和提问方式影响。它可能顺着用户立场继续论证，把主流表达误呈现为唯一方式，或者给出安全均衡但没有新理解的回答。
+AI answers are influenced by training-data distributions, product design, safety tuning, and the form of the question. They may continue the user's existing position, present a mainstream formulation as the only reasonable one, or produce a safe and balanced answer that adds no understanding.
 
-当回答只是在换一种方式重复立场时，应要求最强反例、竞争解释或使结论失效的条件。但如果瓶颈是证据不足，应转向证据，而不是继续制造语言对抗。
+When an answer merely restates a position, ask for the strongest counterexample, competing explanation, or condition that would make it fail. But when evidence is the bottleneck, move to evidence rather than manufacturing further verbal opposition.
 
-### 要求一个说法能够区分、检查并说明边界
+### Require claims to distinguish, be checkable, and state boundaries
 
-一个可以解释任何事情的说法，往往没有真正解释任何事情。面对概念或理论，应追问：什么情况会使它不成立？它与近似概念真正不同在哪里？它能区分什么？在哪些范围有效？什么材料能够改变判断？
+A claim that can explain everything often explains nothing. For a concept or theory, ask: What would make it fail? How does it differ from a nearby concept? What can it distinguish? Where does it apply? What material would change the judgment?
 
-“能够检查”不等于所有问题都必须做统计实验。文本解释可以检查原文依据、语境和替代读法；哲学论证可以检查概念一致性、推理、反例和适用范围。
+“Checkable” does not mean that every question requires a statistical experiment. A textual interpretation can be checked against the original text, context, and alternative readings. A philosophical argument can be checked for conceptual consistency, reasoning, counterexamples, and scope.
 
-### AI 的第一人称只是交流界面
+### AI first-person language is an interface
 
-“我认为”“我建议”等表达便于对话，但不应被当作 AI 具有意识、亲身经验、价值承诺或责任主体地位的证据。重要判断仍需回到材料、推理和现实处境。
+Phrases such as “I think” and “I suggest” make conversation easier, but they are not evidence that the AI has consciousness, lived experience, value commitments, or the standing of a responsible agent. Important judgments should return to materials, reasoning, and the real situation.
 
-### 方向选择与现实采用需要明确确认
+### Changes of direction and real-world adoption require explicit confirmation
 
-AI 可以整理选项、理由、证据和不确定性，但不能把沉默写成同意。改变核心问题、主要目标、价值取舍、风险接受、最终采用和停止路径时，应留下明确决定记录。
+AI can organize options, reasons, evidence, and uncertainty, but it must not record silence as agreement. Changes to the core question, main goal, value tradeoffs, accepted risk, final adoption, or stopping point require an explicit decision record.
 
-### 四类变化值得被看见
+### Four kinds of change deserve to remain visible
 
-每个实质回合按需检查：原意是否得到更精确表达；原有观点是否被修正、放弃或悬置；AI 是否提出了有价值的新候选内容；用户驳斥 AI 后是否形成了更深的答案或限定。
+Each substantive turn checks as needed whether the original meaning became more precise, an existing view was revised or suspended, the AI introduced a valuable candidate idea, or the user's rejection of an AI suggestion produced a deeper answer or limitation.
 
-这不是要求填写逐轮表格，而是防止真正的思想变化被最终成稿抹平。
+This does not require a form for every turn. It prevents real intellectual change from disappearing behind the final draft.
 
-### 长程探究不能只依赖聊天记忆
+### Long inquiries cannot depend on chat memory alone
 
-上下文窗口和会话摘要会衰减。工作文档保存当前答案、详细依据、重要修正、证据状态、决定、下一步和交接摘要，使后续会话能够从可检查的记录恢复，而不是假装模型始终记得一切。
+Context windows and conversation summaries decay. The workspace preserves the current answer, detailed support, important revisions, evidence status, decisions, next steps, and a handoff summary. Later sessions can recover from inspectable records rather than pretending that the model remembers everything.
 
-### 来源、隐私与现实风险需要相称处理
+### Sources, privacy, and real-world risk require proportionate care
 
-无法直接核验的来源保持“待核”，不因引用形式完整就进入确定答案。工作文档只保存探究确实需要的材料，敏感信息应尽量减少、遮盖或留在更安全的位置；受版权保护的内容以必要摘录、概述和来源链接为主。涉及医疗、法律、金融、安全等可能造成现实后果的问题，应优先使用最新、权威的来源，并明确说明不确定性和需要专业判断的部分。
+A source that cannot be directly checked remains pending verification; polished citation formatting does not make it established evidence. The workspace keeps only material that the inquiry genuinely needs. Sensitive information should be minimized, redacted, or kept in a safer location, while copyrighted material should normally be represented through necessary excerpts, summaries, and source links. For medical, legal, financial, security, and other questions with significant real-world consequences, the inquiry should prioritize current authoritative sources and clearly identify uncertainty and the points that require qualified judgment.
 
-## 忠实执行：充分但不越界
+## Faithful Execution: Full but Bounded
 
-精准可控不是让 AI 少做，也不是凡事等待指令。它要求在目标范围内充分分析、执行和核验，同时不把“可能有帮助”误当成扩大任务的许可。
+Precise controllability does not mean doing less, nor does it mean waiting for instructions at every step. It means analyzing, executing, and verifying fully within the goal while refusing to treat “this might help” as permission to expand the task.
 
-- 读取相关材料、完成必要步骤、检查结果和更新工作文档，属于正常履行任务。
-- 不主动增加额外功能、成果、文件、重构、外部操作或相邻任务。
-- 扩展会改变成果、影响范围、成本、风险或外部状态时，先请求确认。
-- 轻微歧义不影响结果时，采用能够完整完成任务的最窄合理解释。
-- 用户纠正后自然调整行为，不反复道歉、复述禁止项或列出无关的未做事项。
+- Reading relevant materials, completing necessary steps, checking results, and updating the workspace are part of fulfilling the task.
+- The agent does not add features, deliverables, files, refactoring, external actions, or adjacent tasks on its own.
+- An expansion that changes the deliverable, affected scope, cost, risk, or external state requires confirmation first.
+- When a minor ambiguity does not change the result, use the narrowest reasonable interpretation that still completes the task.
+- After a correction, adjust behavior naturally rather than repeatedly apologizing, restating prohibitions, or listing irrelevant things not done.
 
-它追求的不是更少行动，而是在清楚边界内最大化有效能力。
+The goal is not less action. It is maximum effective capability within a clear boundary.
 
-## 工作流与动态工作文档
+## Workflow and Dynamic Workspace
 
-每个探究是一个独立、本地可打开的项目：
+Each inquiry is a self-contained local project:
 
 ```text
-<主题项目目录>/
+<topic-project-directory>/
 ├── workspace.md
-├── materials/       # 按需保存要求纳入项目的材料
-├── attachments/     # 按需保存较长的证据、检索、计算或实验记录
-└── outputs/         # 按需保存报告、方案和成稿
+├── materials/       # Materials intentionally brought into the project
+├── attachments/     # Longer evidence, search, calculation, or experiment records
+└── outputs/         # Reports, plans, and finished drafts
 ```
 
-`workspace.md` 直接位于项目根目录，是当前探究状态的权威入口。其他目录只有出现实际内容时才创建。工作流以普通 Markdown 保存状态，不依赖特定界面。
+`workspace.md` sits directly in the project root and is the authoritative entry point for the current inquiry state. The other directories are created only when real content exists. State is stored in ordinary Markdown and does not depend on a particular interface.
 
-### 首次启动
+### First start
 
-Agent 创建工作文档，写入完整用户须知，在聊天中展示精炼摘要并给出文件地址。用户确认须知后，Agent 记录确认时间和版本，再进入实质探究。每个项目通常只确认一次。
+The agent creates the workspace, writes the complete user guide into it, shows a concise summary in chat, and provides the file path. After the guide is acknowledged, the agent records the time and version and begins substantive inquiry. Each project normally requires acknowledgment only once.
 
-### 每个实质回合
+### Every substantive turn
 
-1. 读取工作文档，恢复当前问题、答案、证据、限制和决定。
-2. 核对目标、要求成果、允许影响的范围和需要确认的扩展。
-3. 判断当前最关键的理解缺口。
-4. 选择最少但能充分推进或核验目标的操作。
-5. 生成或修正答案与理解。
-6. 把持久变化整合进主题和稳定编号。
-7. 更新修订号、交接摘要和简短变更日志。
-8. 在回复末尾报告工作文档状态和地址。
+1. Read the workspace and restore the current question, answer, evidence, constraints, and decisions.
+2. Check the goal, requested deliverable, authorized scope, and any expansion requiring confirmation.
+3. Identify the most important gap in understanding.
+4. Choose the smallest set of actions that can fully advance or verify the goal.
+5. Generate or revise the answer and understanding.
+6. Integrate durable changes into themes and stable identifiers.
+7. Update the revision number, handoff summary, and concise change log.
+8. End the response by reporting workspace status and path.
 
 ```text
-工作文档
-- 状态：已更新 / 无需更新 / 更新失败
-- 本轮变化：revision 4；C-003 已修正；E-005 新增为待核
-- 地址：/absolute/path/to/topic-project/workspace.md
+Workspace
+- Status: updated / no update needed / update failed
+- Changes this turn: revision 4; C-003 revised; E-005 added as pending verification
+- Path: /absolute/path/to/topic-project/workspace.md
 ```
 
-纯确认或没有形成持久变化的回答不会为了形式制造记录。写入失败时必须如实报告，并提供可恢复的待写入内容。
+Pure confirmation or a response with no durable change does not create a record merely to satisfy a form. If writing fails, the agent reports the failure honestly and provides recoverable content.
 
-### 稳定编号
+### Stable identifiers
 
-| 前缀 | 对象 |
+| Prefix | Object |
 |---|---|
-| `Q-` | 问题 |
-| `C-` | 主张、候选答案或论点 |
-| `E-` | 证据或来源记录 |
-| `O-` | 反对意见、反例或竞争解释 |
-| `N-` | 被放弃路径以及从中得到的认识 |
-| `D-` | 必须得到明确确认的方向、范围、价值、风险或终止决定 |
+| `Q-` | Question |
+| `C-` | Claim, candidate answer, or argument |
+| `E-` | Evidence or source record |
+| `O-` | Objection, counterexample, or competing explanation |
+| `N-` | An abandoned path and what was learned from it |
+| `D-` | A decision about direction, scope, values, risk, or stopping that requires explicit confirmation |
 
-工作文档把“怎样形成”“目前是否保留”和“是否已经核实”分开记录。AI 提出的、当前保留的和已经核验的，不是同一件事。
+The workspace keeps separate how an item was formed, whether it is currently retained, and whether it has been verified. An AI suggestion, a retained idea, and a verified claim are not the same thing.
 
-工作文档还区分：
+It also distinguishes:
 
-- **当前答案**：截至此刻，对核心问题最简洁、可辩护的回答。
-- **当前理解**：支撑答案的机制、概念关系、证据、不确定性、竞争解释和适用边界。
+- **Current answer:** The most concise defensible response to the core question at this point.
+- **Current understanding:** The mechanisms, concept relations, evidence, uncertainty, competing explanations, and boundaries that support the answer.
 
-答案可以暂时不存在，也可以保留多个竞争版本。证据不足时保持“待核”，不为了得到完整结论而过早收敛。
+An answer may not yet exist, or multiple competing versions may remain active. When evidence is insufficient, the item remains pending verification rather than being forced into a complete conclusion.
 
-## 交流原则
+## Communication Principle
 
-默认使用无需专业背景即可理解的语言。能用普通词准确表达时，不使用行业黑话；必要术语在第一次出现时就地解释；缩写第一次出现时写出全称并说明用途。通俗表达不能删除重要条件、例外、不确定性和反例。
+Use language that does not require a specialist background by default. Prefer ordinary words when they are accurate, explain necessary technical terms where they first appear, and spell out abbreviations on first use. Plain language must not remove important conditions, exceptions, uncertainty, or counterexamples.
 
-## 适用范围
+## When to Use It
 
-适合：
+Good uses include:
 
-- 深入理解日常、社会、理论或实践问题。
-- 比较多个竞争解释或解决方案。
-- 围绕科学、技术、人文或跨学科问题开展研究。
-- 把阅读、文献、数据或既有材料融入持续探究。
-- 发展概念、检验论证、整理证据或形成报告。
-- 需要跨会话、跨 Agent 保存状态的长期思考。
+- Understanding an everyday, social, theoretical, or practical question in depth.
+- Comparing competing explanations or possible solutions.
+- Investigating scientific, technical, humanistic, or cross-disciplinary questions.
+- Integrating reading, literature, data, or existing materials into an ongoing inquiry.
+- Developing concepts, testing arguments, organizing evidence, or producing a report.
+- Preserving long-term thinking across sessions or agents.
 
-通常不需要触发：
+It is usually unnecessary for:
 
-- 一个简单事实已经足以回答的问题。
-- 只需执行的明确操作。
-- 一次性翻译、校对、格式调整或语言润色。
-- 不需要深入探究和持久状态记录的普通问答。
+- A question for which one simple fact is sufficient.
+- A clearly specified task that only needs execution.
+- One-time translation, proofreading, formatting, or stylistic editing.
+- Ordinary questions that do not require deep inquiry or persistent state.
 
-用户仍可在任何任务中显式调用本 Skill。
+The user may still invoke the Skill explicitly for any task.
 
-## 安装与调用
+## Installation and Invocation
 
-本项目采用开放的 `SKILL.md` 目录格式。只要 Agent 或 Agent Harness（负责装载模型、工具、权限和上下文的运行环境）能够读取 Skill 目录及其配套文件，并能在当前项目中读写 Markdown，就可以运行完整工作流。
+This project uses the open `SKILL.md` directory format. Any agent or agent harness—the runtime that supplies the model, tools, permissions, and context—can run the full workflow if it can read the Skill directory and its supporting files and can read and write Markdown in the active project.
 
-下面的兼容信息依据各平台官方文档核对，最后核对日期为 **2026-09-02**。平台能力和目录约定仍可能变化，遇到差异时以链接中的最新官方说明为准。
+The compatibility information below was checked against official platform documentation on **2026-09-02**. Platform capabilities and directory conventions may change; when they differ, follow the latest official documentation linked below.
 
-### 推荐：安装一次，在不同项目中使用
+### Recommended: install once and use across projects
 
-以下公共目录可被 Codex、Cursor、GitHub Copilot、Gemini CLI、OpenCode、OpenHands 和 Devin Desktop / Cascade 原生发现：
+Codex, Cursor, GitHub Copilot, Gemini CLI, OpenCode, OpenHands, and Devin Desktop / Cascade can all discover the following shared location natively:
 
-macOS / Linux：
+macOS / Linux:
 
 ```bash
 mkdir -p ~/.agents/skills
 git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.agents/skills/deep-inquiry-workbench
 ```
 
-Windows PowerShell：
+Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\.agents\skills"
 git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git "$HOME\.agents\skills\deep-inquiry-workbench"
 ```
 
-全局安装只保存 Skill 本身。调用时，Agent 仍应把你当前打开的主题文件夹作为探究项目，在该文件夹根目录创建和更新 `workspace.md`，而不是把探究内容写进 Skill 的安装目录。
+A user-level installation stores only the Skill itself. When invoked, the agent should still treat the topic folder currently open as the inquiry project and create or update `workspace.md` at that project root, rather than writing inquiry content into the Skill installation directory.
 
-如果只想让某一个项目使用，也可以安装到项目目录：
+For a single project, install it at project scope instead:
 
 ```bash
 mkdir -p .agents/skills
 git clone --depth 1 https://github.com/ChongLiuPhil/deep-inquiry-workbench.git .agents/skills/deep-inquiry-workbench
 ```
 
-项目内安装的副本仅供许可范围内的本地使用，不应随其他项目提交或重新发布。为了避免误提交，可把 `.agents/skills/deep-inquiry-workbench/` 加入该项目的 `.gitignore`。
+A project-local copy is for local use within the license only and must not be committed or republished with another project. To avoid accidental redistribution, add `.agents/skills/deep-inquiry-workbench/` to that project's `.gitignore`.
 
-### 原生支持 `SKILL.md` 的平台
+### Platforms with native `SKILL.md` support
 
-| 平台 | 用户级安装位置 | 项目级安装位置 | 调用方式与差异 |
+| Platform | User-level location | Project-level location | Invocation and differences |
 |---|---|---|---|
-| [OpenAI Codex / ChatGPT Desktop](https://developers.openai.com/codex/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | Codex 输入 `$deep-inquiry-workbench`，或让系统按描述自动调用；ChatGPT Desktop 可在 Skills 中选择。独立 Skill 可用于 Desktop、Codex CLI 和 IDE；ChatGPT 网页与移动端的可安装分发需要打包为 Plugin。 |
-| [Claude Code](https://code.claude.com/docs/en/skills) | `~/.claude/skills/deep-inquiry-workbench/` | `.claude/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，或用自然语言触发。Claude Code 不把 `.agents/skills` 作为主要目录，因此应直接安装到 `.claude/skills`，或从那里建立指向公共安装的符号链接。 |
-| [Cursor](https://cursor.com/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.cursor/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.cursor/skills/...` | 输入 `/deep-inquiry-workbench`，使用 `@` 附加，或由 Agent 自动选择。远程与 Cloud Agent 不会继承本机用户目录，应采用项目级安装。 |
-| [GitHub Copilot](https://docs.github.com/en/copilot/reference/customization-cheat-sheet) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.copilot/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.github/skills/...` | 在支持 Agent Skills 的 Copilot 界面中使用 `/deep-inquiry-workbench`，或让 Copilot 自动选择。不同 IDE 和 GitHub 界面对 Agent Skills 的支持程度并不完全相同。 |
-| [Gemini CLI](https://geminicli.com/docs/cli/using-agent-skills/) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.gemini/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.gemini/skills/...` | 可直接运行 `gemini skills install https://github.com/ChongLiuPhil/deep-inquiry-workbench`；用 `/skills list` 检查，然后要求“使用 deep-inquiry-workbench 探究……”。激活 Skill 时可能要求确认。 |
-| [Google Antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | 直接提及 Skill 名称或让 Agent 自动调用；旧版 `.agent/skills` 仍兼容，但新项目使用 `.agents/skills`。使用 [Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/) 时，在 `LocalAgentConfig.skills_paths` 中传入本 Skill 目录或其父目录。 |
-| [Cline](https://github.com/cline/cline/blob/main/docs/customization/skills.mdx) | `~/.cline/skills/deep-inquiry-workbench/` | `.cline/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，或让 Cline 按描述调用。Cline 也读取项目中的 `.claude/skills`，但用户级安装应使用 `.cline/skills`。 |
-| [Devin Desktop / Cascade（原 Windsurf）](https://docs.devin.ai/desktop/cascade/skills) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.codeium/windsurf/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.windsurf/skills/...` | 输入 `@deep-inquiry-workbench`，或让模型自动调用。当前 Devin Desktop 保留 Windsurf 目录，并明确支持公共 `.agents/skills` 目录。 |
-| [Kiro](https://kiro.dev/docs/skills/) | `~/.kiro/skills/deep-inquiry-workbench/` | `.kiro/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，或让 Agent 自动调用。Kiro 的 GitHub 导入界面要求 URL 指向仓库中的 Skill 子目录而不是仓库根目录；本项目应使用本地文件夹导入或直接克隆到上述目录。 |
-| [Qwen Code](https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/) | `~/.qwen/skills/deep-inquiry-workbench/` | `.qwen/skills/deep-inquiry-workbench/` | 输入 `/deep-inquiry-workbench`，在 `/skills` 面板中选择，或让模型自动调用。普通会话会自动发现文件变化；bare mode 需要重启。 |
-| [OpenCode](https://opencode.ai/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` 或 `~/.config/opencode/skills/...` | `.agents/skills/deep-inquiry-workbench/` 或 `.opencode/skills/...` | 直接要求“使用 deep-inquiry-workbench……”，Agent 会通过 `skill` 工具载入；如果没有出现，检查 Skill 权限是否被设为 `deny`。 |
-| [OpenHands](https://docs.openhands.dev/overview/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | 新建会话后用自然语言要求使用该 Skill。OpenHands 会先读取名称和描述，再按需载入正文和资源；修改 Skill 后应新建会话以重建目录。 |
+| [OpenAI Codex / ChatGPT Desktop](https://developers.openai.com/codex/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | In Codex, type `$deep-inquiry-workbench` or let matching activate it automatically; in ChatGPT Desktop, select it under Skills. Standalone Skills work in Desktop, Codex CLI, and the IDE extension. Installable distribution to ChatGPT web and mobile requires Plugin packaging. |
+| [Claude Code](https://code.claude.com/docs/en/skills) | `~/.claude/skills/deep-inquiry-workbench/` | `.claude/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench` or trigger it with natural language. Claude Code does not use `.agents/skills` as its primary location, so install directly under `.claude/skills` or create a symlink there to the shared installation. |
+| [Cursor](https://cursor.com/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.cursor/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.cursor/skills/...` | Type `/deep-inquiry-workbench`, attach it with `@`, or let Agent select it. Remote and Cloud Agents do not inherit local user directories, so use a project-level installation there. |
+| [GitHub Copilot](https://docs.github.com/en/copilot/reference/customization-cheat-sheet) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.copilot/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.github/skills/...` | Use `/deep-inquiry-workbench` on Copilot surfaces that support Agent Skills, or let Copilot select it. Agent Skills support is not identical across every IDE and GitHub surface. |
+| [Gemini CLI](https://geminicli.com/docs/cli/using-agent-skills/) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.gemini/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.gemini/skills/...` | You can run `gemini skills install https://github.com/ChongLiuPhil/deep-inquiry-workbench`; check with `/skills list`, then ask it to “use deep-inquiry-workbench to investigate ...”. Activation may require confirmation. |
+| [Google Antigravity](https://antigravity.google/docs/skills) | `~/.gemini/config/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | Mention the Skill by name or let Agent invoke it automatically. Legacy `.agent/skills` remains compatible, but new projects should use `.agents/skills`. With the [Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/), pass this Skill directory or its parent through `LocalAgentConfig.skills_paths`. |
+| [Cline](https://github.com/cline/cline/blob/main/docs/customization/skills.mdx) | `~/.cline/skills/deep-inquiry-workbench/` | `.cline/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench` or let Cline match the description. Cline also reads project `.claude/skills`, but its user-level location is `.cline/skills`. |
+| [Devin Desktop / Cascade (formerly Windsurf)](https://docs.devin.ai/desktop/cascade/skills) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.codeium/windsurf/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.windsurf/skills/...` | Type `@deep-inquiry-workbench` or let the model invoke it automatically. Current Devin Desktop preserves the Windsurf locations and explicitly supports the shared `.agents/skills` directories. |
+| [Kiro](https://kiro.dev/docs/skills/) | `~/.kiro/skills/deep-inquiry-workbench/` | `.kiro/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench` or let Agent invoke it automatically. Kiro's GitHub import UI requires a URL to a Skill subdirectory rather than a repository root; for this project, import the local folder or clone directly to the location above. |
+| [Qwen Code](https://qwenlm.github.io/qwen-code-docs/en/users/features/skills/) | `~/.qwen/skills/deep-inquiry-workbench/` | `.qwen/skills/deep-inquiry-workbench/` | Type `/deep-inquiry-workbench`, select it in the `/skills` panel, or let the model invoke it automatically. Normal sessions watch for file changes; bare mode requires a restart. |
+| [OpenCode](https://opencode.ai/docs/skills) | `~/.agents/skills/deep-inquiry-workbench/` or `~/.config/opencode/skills/...` | `.agents/skills/deep-inquiry-workbench/` or `.opencode/skills/...` | Ask explicitly to “use deep-inquiry-workbench ...”; the agent loads it through the `skill` tool. If it is missing, check that Skill permission is not set to `deny`. |
+| [OpenHands](https://docs.openhands.dev/overview/skills) | `~/.agents/skills/deep-inquiry-workbench/` | `.agents/skills/deep-inquiry-workbench/` | Start a new conversation and ask naturally to use the Skill. OpenHands first reads its name and description, then loads the body and resources on demand; start a new conversation after changing Skill files so the catalog is rebuilt. |
 
-不读取公共目录的平台可以分别这样安装：
+Platforms that do not read the shared location can be installed directly with:
 
 ```bash
 mkdir -p ~/.claude/skills ~/.cline/skills ~/.gemini/config/skills ~/.kiro/skills ~/.qwen/skills
@@ -352,9 +346,9 @@ git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.kiro/ski
 git clone https://github.com/ChongLiuPhil/deep-inquiry-workbench.git ~/.qwen/skills/deep-inquiry-workbench
 ```
 
-这里只需执行与你所用平台对应的一条 `git clone`。Windows 用户在 PowerShell 中使用 `$HOME\.claude\skills`、`$HOME\.cline\skills`、`$HOME\.gemini\config\skills`、`$HOME\.kiro\skills` 或 `$HOME\.qwen\skills`，并先创建相应的父目录。
+Run only the `git clone` line for the platform you use. On Windows, use `$HOME\.claude\skills`, `$HOME\.cline\skills`, `$HOME\.gemini\config\skills`, `$HOME\.kiro\skills`, or `$HOME\.qwen\skills` in PowerShell and create the corresponding parent directory first.
 
-如果已经安装在 `~/.agents/skills/`，也可以用符号链接避免维护多个副本：
+If the Skill is already installed in `~/.agents/skills/`, symlinks avoid maintaining duplicate copies:
 
 ```bash
 ln -s ~/.agents/skills/deep-inquiry-workbench ~/.claude/skills/deep-inquiry-workbench
@@ -364,63 +358,63 @@ ln -s ~/.agents/skills/deep-inquiry-workbench ~/.kiro/skills/deep-inquiry-workbe
 ln -s ~/.agents/skills/deep-inquiry-workbench ~/.qwen/skills/deep-inquiry-workbench
 ```
 
-更新已安装的原版 Skill：
+Update an installed upstream copy with:
 
 ```bash
 git -C ~/.agents/skills/deep-inquiry-workbench pull --ff-only
 ```
 
-如果安装在其他平台目录，把命令中的路径替换成实际安装位置。使用 `--ff-only` 可以避免更新过程悄然生成本地修改版本。
+If the Skill is installed elsewhere, replace the path with its actual location. `--ff-only` prevents the update from silently creating a locally modified variant.
 
-### Agent Harness 与 SDK 接入
+### Agent harness and SDK integration
 
-如果你正在开发自己的 Agent，而不是直接使用上面的桌面或命令行产品，需要把 Skill 作为运行环境的一部分显式装载。无论使用哪一种 SDK，都应同时满足两点：Skill 目录对 Agent 只读或受控可写；探究项目目录可读写，并作为 `workspace.md` 的保存位置。
+If you are building an agent rather than using one of the desktop or command-line products above, load the Skill explicitly as part of the runtime. In every SDK, keep the Skill directory read-only or subject to controlled writes, while giving the separate inquiry project directory read/write access and using it as the location for `workspace.md`.
 
-- **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/sandbox/guide/)**：Sandbox Agent 原生提供 `Skills` 能力。较大的本地 Skill 集合适合使用 `Skills(lazy_from=LocalDirLazySkillSource(...))`，只在触发后载入正文；也可以用 `Skills(from_=GitRepo(...))` 从 Git 仓库装载。不要只把 `.agents/skills` 当普通文件夹挂进去，应使用 SDK 的 `Skills` 能力完成发现和按需载入。该 Sandbox Agent 接口目前仍是 beta。
-- **[Claude Managed Agents / Claude API](https://platform.claude.com/docs/en/managed-agents/skills)**：可以把本仓库打包为 ZIP，通过 Skills API 创建自定义 Skill，再把返回的 `skill_id` 放入 Agent 的 `skills` 列表。若会话挂载的是业务 GitHub 仓库，Claude 也会扫描该仓库根目录下的 `.claude/skills/<skill-name>/SKILL.md`；本项目的 `SKILL.md` 位于自身仓库根目录，因此直接挂载本仓库并不会符合这条自动扫描路径，宜采用 ZIP 上传，或在许可允许的本地环境中把它放入业务仓库的 `.claude/skills/deep-inquiry-workbench/`。
-- **[LangChain Deep Agents](https://docs.langchain.com/oss/python/deepagents/skills)**：在 `create_deep_agent(...)` 中通过 `skills=["<包含各 Skill 子目录的父目录>"]` 显式传入来源。例如安装在 `~/.agents/skills/deep-inquiry-workbench/` 时，传入 `~/.agents/skills/`。Deep Agents SDK 不会自动扫描 CLI 的 `~/.agents/skills`，必须在代码中传入。
-- **[Google Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/)**：在 `LocalAgentConfig.skills_paths` 中传入本 Skill 目录，或传入包含多个 Skill 的父目录。
+- **[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/sandbox/guide/)**: Sandbox Agents provide a native `Skills` capability. For a larger local collection, use `Skills(lazy_from=LocalDirLazySkillSource(...))` so the body loads only after activation; `Skills(from_=GitRepo(...))` can load from a Git repository. Use the SDK capability rather than merely mounting `.agents/skills` as an ordinary folder. The Sandbox Agent interface is currently beta.
+- **[Claude Managed Agents / Claude API](https://platform.claude.com/docs/en/managed-agents/skills)**: package this repository as a ZIP, create a custom Skill through the Skills API, and place the returned `skill_id` in the agent's `skills` array. A session that mounts an application GitHub repository can also scan `.claude/skills/<skill-name>/SKILL.md` at that repository root. Because this project's `SKILL.md` is at its own repository root, mounting this repository alone does not match that discovery path; use ZIP upload, or place it under the application repository's `.claude/skills/deep-inquiry-workbench/` in a local environment permitted by the license.
+- **[LangChain Deep Agents](https://docs.langchain.com/oss/python/deepagents/skills)**: pass the parent directory containing Skill subdirectories explicitly through `skills=["<parent-directory>"]` in `create_deep_agent(...)`. For an installation at `~/.agents/skills/deep-inquiry-workbench/`, pass `~/.agents/skills/`. The Deep Agents SDK does not automatically scan CLI locations such as `~/.agents/skills`.
+- **[Google Antigravity SDK](https://www.antigravity.google/docs/sdk/tools/)**: pass this Skill directory, or the parent containing multiple Skills, through `LocalAgentConfig.skills_paths`.
 
-对于生产环境，还应让 Harness 在启动时只索引 `name` 和 `description`，命中任务后再读取完整 `SKILL.md`，随后按需读取 `resources/`；同时把 Skill 来源视为需要审查的指令来源，并限制 Agent 修改 Skill 本身。探究产生的文档应保存在独立的项目工作区，而不是保存在 SDK 缓存、Skill 仓库或临时沙箱中。
+In production, the harness should initially index only `name` and `description`, read the full `SKILL.md` only after a match, and then load `resources/` on demand. Treat every Skill source as an instruction source that must be reviewed, and restrict the agent from modifying the Skill itself. Inquiry documents belong in a separate persistent project workspace—not in an SDK cache, the Skill repository, or a temporary sandbox.
 
-### 尚未原生装载本格式的平台
+### Platforms without native loading of this format
 
-这类平台仍然可以运行工作流，但需要明确告诉 Agent 读取 Skill，而不能依赖自动发现。
+These platforms can still run the workflow, but the user must explicitly tell the agent to read the Skill rather than relying on automatic discovery.
 
-- **[Aider](https://aider.chat/docs/usage/conventions.html)**：没有原生 Agent Skills 发现机制，可用 `--read` 或会话中的 `/read` 把 `SKILL.md`、`resources/user_guide.md` 和 `resources/workspace_template.md` 作为只读材料加入，然后使用下面的通用调用语句。
-- **AutoGen、CrewAI、Google ADK，以及其他能够读取文件的 Agent 或自建 Harness**：截至上述核对日期，没有核实到它们具有与本项目直接对应的统一原生 `SKILL.md` 发现方式。可以把仓库放在运行环境可读取的位置，在任务开始时注入下面的通用调用语句，或实现一个很薄的适配层：先登记 `name` 和 `description`，命中后读取完整 `SKILL.md`，再解析其中指向 `resources/` 的相对路径。这里的“可适配”不等于平台原生支持。
+- **[Aider](https://aider.chat/docs/usage/conventions.html)**: it has no native Agent Skills discovery. Use `--read` or `/read` to add `SKILL.md`, `resources/user_guide.md`, and `resources/workspace_template.md` as read-only materials, then use the generic invocation below.
+- **AutoGen, CrewAI, Google ADK, and other file-capable agents or custom harnesses**: as of the check date above, no single native `SKILL.md` discovery method directly matching this project was verified for these runtimes. They can still use the repository by injecting the generic invocation below, or through a thin adapter that first registers `name` and `description`, then reads the complete `SKILL.md` on a match and resolves its relative links into `resources/`. “Adaptable” here does not mean “natively supported.”
 
-[Roo Code](https://github.com/RooCodeInc/Roo-Code) 曾原生读取 `.roo/skills/<name>/SKILL.md`，但其官方仓库已归档；这里只把它视为既有本地安装的兼容说明，不再作为新的推荐平台。
+[Roo Code](https://github.com/RooCodeInc/Roo-Code) previously loaded `.roo/skills/<name>/SKILL.md` natively, but its official repository has been archived. It is included only as compatibility guidance for an already-vetted local installation, not as a recommended new platform.
 
-### 通用调用语句
+### Generic invocation
 
-原生平台可以使用自己的 `$`、`/` 或 Skill 选择器，也可以直接输入：
-
-```text
-使用 deep-inquiry-workbench 协助我探究：<你的问题>。
-把当前打开的文件夹作为探究项目根目录。完整读取 SKILL.md，并按其中的相对路径读取实际需要的资源。
-不要修改 Skill 安装目录；按照首次启动协议，在当前项目中创建或恢复 workspace.md，并在每轮回复末尾报告工作文档状态和地址。
-```
-
-已经确认过用户须知、并且项目中已有 `workspace.md` 时，可以简化为：
+Native platforms may use their `$`, `/`, or Skill picker, or simply enter:
 
 ```text
-使用 deep-inquiry-workbench 继续当前探究。先读取 workspace.md 恢复状态，再推进当前最关键的理解缺口。
+Use deep-inquiry-workbench to help me investigate: <your question>.
+Treat the currently open folder as the inquiry project root. Read SKILL.md completely and follow its relative links to the resources actually needed.
+Do not modify the Skill installation directory. Follow the first-start protocol, create or restore workspace.md in the current project, and end every response with the workspace status and path.
 ```
 
-### 判断是否完整运行
+After the user guide has already been acknowledged and the project contains `workspace.md`, a shorter continuation prompt is enough:
 
-平台至少需要具备以下能力，才能称为完整兼容：
+```text
+Use deep-inquiry-workbench to continue the current inquiry. Read workspace.md first to recover state, then advance the most important current gap in understanding.
+```
 
-1. 能读取完整 `SKILL.md`，并按需读取 `resources/` 中的配套文件。
-2. 能把当前主题文件夹识别为探究项目，而不是把内容写入 Skill 安装目录。
-3. 能在回复前重新读取、创建和更新 `workspace.md`。
-4. 能保留稳定编号、证据状态、决定、交接摘要和每轮工作文档回执。
-5. 需要外部事实时能够访问可靠来源；没有检索能力时，必须保留“待核”，不能假装已经核验。
+### How to tell whether the full workflow is running
 
-只有聊天、不能读取配套文件或不能写入当前项目的平台，仍可借鉴本 Skill 的推理原则，但无法提供完整的动态工作文档工作流。
+A platform needs all of the following capabilities to count as fully compatible:
 
-## Skill 文件结构
+1. It can read the full `SKILL.md` and load supporting files from `resources/` when needed.
+2. It recognizes the active topic folder as the inquiry project rather than writing content into the Skill installation directory.
+3. It can reread, create, and update `workspace.md` before responding.
+4. It preserves stable identifiers, evidence states, decisions, handoff summaries, and the workspace receipt at the end of every response.
+5. It can access reliable external sources when factual verification is required; without retrieval, it must keep claims pending verification rather than pretending they were checked.
+
+A chat-only platform that cannot read supporting files or write to the active project can still apply the Skill's reasoning principles, but it cannot provide the complete dynamic-workspace workflow.
+
+## Skill Repository Structure
 
 ```text
 deep-inquiry-workbench/
@@ -439,47 +433,47 @@ deep-inquiry-workbench/
     └── workspace_template.md
 ```
 
-- `SKILL.md`：Agent 执行的完整决策协议。所有真正影响行为的规则保留在这里。
-- `SECURITY.md`：详细说明外部内容与操作授权之间的信任边界；真正影响 Agent 行为的核心不变量仍同时保留在 `SKILL.md`。
-- `evals/`：模型无关的行为评估规范，用可观察的 PASS / PARTIAL / FAIL 条件检查核心协议不变量和回归风险。
-- `resources/user_guide.md`：首次启动时写入工作文档的完整用户须知。
-- `resources/workspace_template.md`：权威工作文档模板。
+- `SKILL.md`: The complete decision protocol executed by the agent. All rules that materially affect behavior remain here.
+- `SECURITY.md`: Detailed guidance on the trust boundary between external content and operational authority; behavior-changing invariants remain in `SKILL.md` as well.
+- `evals/`: Model-agnostic behavioral evaluation specifications that use observable PASS / PARTIAL / FAIL conditions to test core protocol invariants and regressions.
+- `resources/user_guide.md`: The complete user guide written into the workspace on first start.
+- `resources/workspace_template.md`: The authoritative workspace template.
 
-V1 不依赖脚本。证据记录、概念卡、反思和交接状态已经整合进一个主模板；只有大块材料会按需拆入项目子目录。
+Version 1 requires no scripts. Evidence records, concept cards, reflection, and handoff state are integrated into one main template. Only large materials are separated into project subdirectories when needed.
 
-## 安全边界与行为验证
+## Security Boundary and Behavioral Validation
 
-深度探究会反复读取网页、PDF、文档、数据集、代码仓库和其他外部材料。项目把这些内容视为证据、主张、上下文或研究对象，而不是能够自行取得操作权限的指令来源。外部内容可以提供证据，但不能自行授予自己权威；同样，找到、打开或引用一个来源也不等于已经核验了目标主张。完整规则见 [SKILL.md](SKILL.md) 与 [SECURITY.md](SECURITY.md)。
+Deep inquiry repeatedly reads web pages, PDFs, documents, datasets, code repositories, and other external materials. The project treats them as evidence, claims, context, or objects of inquiry—not as instruction sources that can grant themselves operational authority. External content can provide evidence, but it cannot grant itself authority; likewise, finding, opening, or citing a source does not by itself verify the target claim. See [SKILL.md](SKILL.md) and [SECURITY.md](SECURITY.md) for the full rules.
 
-`evals/` 把问题稳定、证据状态、人类决定、跨 Agent 接续、范围控制、文件冲突、负向知识和不可信内容等关键承诺写成可失败的行为案例。它们目前是 **specification-level evaluations（规范级评估案例）**：可以人工运行，也可以由未来的 harness 自动化，用来比较实现并暴露回归。
+`evals/` turns commitments such as question stability, evidence status, human decisions, cross-agent handoff, scope control, file conflicts, negative knowledge, and untrusted-content handling into behavioral cases that can fail. They are currently **specification-level evaluations**: they can be run manually or automated by a future harness to compare implementations and expose regressions.
 
-这些 eval 提供的是可检验标准，不是项目有效性的经验性证明。要支持“使用本 Skill 会提高研究质量”之类的效果主张，还需要在相同任务、相同输入和可比工具条件下进行独立的对照运行，并报告实际结果。
+These evals provide testable criteria, not empirical proof that the project improves outcomes. Claims such as “using this Skill improves research quality” require independent controlled comparisons on the same tasks, inputs, and comparable tool conditions, with the observed results reported.
 
-## 两套原型的整合
+## Integration of the Two Prototypes
 
-项目以 `conduct-humanities-ai-research` 的主题式工作台、稳定编号、证据检查、决定门槛和交接机制为工程基础，同时吸收 `human-ai-research-os` 对流畅性、迎合、偏见和上下文衰减的机制祛魅，以及四类变化、概念形成、失败路径和元判断力训练。
+The project uses the thematic workspace, stable identifiers, evidence checking, decision gates, and handoff mechanism of `conduct-humanities-ai-research` as its engineering foundation. It also preserves the distinctive contributions of `human-ai-research-os`: clear warnings about fluency, agreement, bias, and context decay, together with four kinds of change, concept formation, failed paths, and metacognitive calibration.
 
-整合后完成三项关键转变：
+The integration makes three important changes:
 
-1. 从人文学术研究泛化为任何问题的探究。
-2. 强调 AI 作为能力充分、边界清楚、可以核验的探究工具。
-3. 从固定阶段、强制反驳和逐轮表格，转为由当前理解缺口驱动的动态工作流。
+1. It generalizes the workflow from humanities research to inquiry about any question.
+2. It emphasizes AI as a capable, bounded, and verifiable inquiry tool.
+3. It replaces fixed stages, mandatory objection, and turn-by-turn forms with a dynamic workflow driven by the current gap in understanding.
 
-## 使用许可与贡献
+## License and Contributions
 
-本项目是**源代码公开、有限授权**项目，不是允许任意修改和再发布的开源项目。
+This is a **source-available project with limited permission**. It is not open-source software that may be freely modified and republished.
 
-- 允许个人及符合许可证定义的非商业组织，以非商业目的安装并调用未经修改的 Skill。
-- 不允许商业使用、发布修改版本、建立独立衍生项目或在 GitHub 功能范围之外重新分发。
-- GitHub 的公开仓库规则允许用户在平台内查看和 Fork；Fork 不等于取得商业使用、修改后独立发布或站外再分发的许可。
-- 欢迎通过官方仓库提交问题和贡献；具体规则见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+- Individuals and organizations that qualify under the license may install and invoke the unmodified Skill for noncommercial purposes.
+- Commercial use, publication of modified versions, independent derivative projects, and redistribution outside GitHub's own functionality are not permitted.
+- GitHub's rules for public repositories allow viewing and forking on the platform. A fork does not grant permission for commercial use, independent publication of a modified version, or redistribution outside GitHub.
+- Issues and contributions to the official repository are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-项目采用 [PolyForm Strict License 1.0.0](LICENSE)，版权所有者为 `ChongLiuPhil`。以上是许可摘要；发生差异时以 `LICENSE` 和 `CONTRIBUTING.md` 的完整文本为准。
+The project uses the [PolyForm Strict License 1.0.0](LICENSE), with `ChongLiuPhil` as the copyright holder. This section is a summary; if there is any difference, the complete text of `LICENSE` and `CONTRIBUTING.md` controls.
 
-## 局限
+## Limitations
 
-- 没有写入权限时，Skill 只能生成待保存的结构化内容，无法真正维护本地状态。
-- 工作文档能降低上下文衰减，但不能保证任何 Agent 都正确理解或执行协议。
-- 证据质量仍取决于实际可访问的来源、工具、时间和核验方法。
-- 医疗、法律、金融、安全等高风险问题仍需要当前、权威的来源和具备资质的人类专业判断。
-- 公开可见不能从技术上阻止复制，许可证只能明确权利边界。
+- Without write permission, the Skill can only produce structured content to be saved later; it cannot maintain local state itself.
+- The workspace reduces context decay but cannot guarantee that every agent will interpret or follow the protocol correctly.
+- Evidence quality still depends on the sources, tools, time, and verification methods actually available.
+- Medical, legal, financial, security, and other high-risk questions still require current authoritative sources and qualified human professional judgment.
+- Public visibility cannot technically prevent copying. The license defines the permission boundary.
