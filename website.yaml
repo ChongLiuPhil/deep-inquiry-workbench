@@ -1,13 +1,21 @@
 schema_version: 1
 publish: false
 
+language:
+  default: auto
+  fallback: en
+  supported:
+    - en
+    - zh
+  detect_from_browser: true
+
 title:
   zh: 深度探究工作台
   en: Deep Inquiry Workbench
 
 summary:
-  zh: ""
-  en: ""
+  zh: "一个可供不同 AI Agent 调用的通用深度探究 Skill，通过显式化推理、证据判断、批判、不确定性与文档协议来支持持续探究。"
+  en: "A reusable deep-inquiry skill for AI agents that makes reasoning, evidence evaluation, criticism, uncertainty, and documentation explicit during sustained investigation."
 
 status:
   zh: ""
