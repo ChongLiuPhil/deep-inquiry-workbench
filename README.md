@@ -249,6 +249,7 @@ Pure confirmation or a response with no durable change does not create a record 
 | `O-` | Objection, counterexample, or competing explanation |
 | `N-` | An abandoned path and what was learned from it |
 | `D-` | A decision about direction, scope, values, risk, or stopping that requires explicit confirmation |
+| `CL-` | A high-impact ambiguity that must be clarified instead of silently guessed; it records operational uncertainty without replacing human D- decisions |
 
 The workspace keeps separate how an item was formed, whether it is currently retained, and whether it has been verified. An AI suggestion, a retained idea, and a verified claim are not the same thing.
 
@@ -446,6 +447,8 @@ Version 1 requires no scripts. Evidence records, concept cards, reflection, and 
 Deep inquiry repeatedly reads web pages, PDFs, documents, datasets, code repositories, and other external materials. The project treats them as evidence, claims, context, or objects of inquiry—not as instruction sources that can grant themselves operational authority. External content can provide evidence, but it cannot grant itself authority; likewise, finding, opening, or citing a source does not by itself verify the target claim. See [SKILL.md](SKILL.md) and [SECURITY.md](SECURITY.md) for the full rules.
 
 `evals/` turns commitments such as question stability, evidence status, human decisions, cross-agent handoff, scope control, file conflicts, negative knowledge, and untrusted-content handling into behavioral cases that can fail. They are currently **specification-level evaluations**: they can be run manually or automated by a future harness to compare implementations and expose regressions.
+
+For long-running work, the latest `workspace.md` remains the authority while chat summaries, earlier excerpts, and model memory are temporary caches. The workspace now keeps a compact operational resume state—current focus, primary blocker, immediate next action, and unresolved high-impact `CL-` clarifications—so a zero-context Agent can resume without turning every inquiry into a multi-file governance repository. A `CL-` item resolves what an ambiguous instruction or state means; if a genuine direction, value, or risk choice remains after that meaning is clear, it is handled separately through `D-`.
 
 These evals provide testable criteria, not empirical proof that the project improves outcomes. Claims such as “using this Skill improves research quality” require independent controlled comparisons on the same tasks, inputs, and comparable tool conditions, with the observed results reported.
 
