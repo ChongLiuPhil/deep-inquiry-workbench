@@ -1,0 +1,50 @@
+ahicp_context_interface:
+  version: "0.1-draft"
+  mode: "repository-backed-functional-mapping"
+  authoritative_store: "github"
+  canonical_language: "zh-CN"
+
+  control_plane:
+    manifest: "AHICP_MANIFEST.yaml"
+    project_status: "PROJECT_STATUS.md"
+    start_here: "START_HERE.zh-CN.md"
+    agent_contract: "AGENTS.zh-CN.md"
+    authoritative_session_copy: false
+
+  context_policy:
+    retrieval: "selective-on-demand"
+    cache_authority: "none"
+    read_latest_before_high_impact_action: true
+    read_latest_before_write: true
+    invalidate_touched_cache_after_write: true
+    write_through_repository: true
+
+  task_routes:
+    PROTOCOL:
+      required:
+        - "SKILL.md"
+        - "resources/workspace_template.md"
+        - "resources/user_guide.md"
+        - "evals/README.md"
+    SECURITY:
+      required:
+        - "SECURITY.md"
+        - "SKILL.md"
+        - "evals/cases/02-untrusted-content-injection.md"
+    REPOSITORY:
+      required:
+        - "PROJECT_STATUS.md"
+        - "CONTRIBUTING.md"
+        - "project.yaml"
+    PUBLICATION:
+      required:
+        - "publishing.yaml"
+        - "website.yaml"
+        - "project.yaml"
+
+  failure_states:
+    - "CONTEXT-STALE"
+    - "REVISION-CONFLICT"
+    - "PRODUCT-PROTOCOL-DRIFT"
+    - "RUNTIME-AUTHORITY-CONFLATION"
+    - "PUBLICATION-AUTHORIZATION-UNCLEAR"
