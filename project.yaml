@@ -20,8 +20,24 @@ topics:
 source_of_truth:
   overview: README.md
   protocol: SKILL.md
+  workspace_contract: resources/workspace_template.md
+  user_guide: resources/user_guide.md
+  behavioral_evals: evals/
+  security_policy: SECURITY.md
+  project_status: PROJECT_STATUS.md
+  ahicp_manifest: AHICP_MANIFEST.yaml
+  ahicp_context_interface: AHICP_CONTEXT_INTERFACE.yaml
+  project_stack: project-stack.yaml
+  publishing_contract: publishing.yaml
   contribution_policy: CONTRIBUTING.md
   license: LICENSE
+
+current_stack:
+  protocol_entry: AHICP
+  ahicp_profile: project-native-inquiry-skill
+  repository_source_public: true
+  web_authorized: false
+  web_provider: null
 
 website:
   metadata: website.yaml
